@@ -4,7 +4,8 @@ import {
   ArrowRight, CheckCircle, ListTodo, FlaskConical, Network, 
   AlertTriangle, ChevronDown, ChevronUp, Zap, Shield, Eye,
   FileText, BarChart3, Target, Heart, Github, Star,
-  XCircle, RefreshCw, Plus, GitMerge, FileDown, Kanban
+  XCircle, RefreshCw, Plus, GitMerge, FileDown, Kanban,
+  Sparkles, BrainCircuit, DollarSign, SearchCode, Globe, Bot
 } from 'lucide-react';
 
 /* ═══════════ CUSTOM LOGO SVG ═══════════ */
@@ -74,23 +75,31 @@ export default function Landing() {
   const faqs = [
     {
       q: 'What is InitPhase and who is it for?',
-      a: 'InitPhase is a structured project management tool designed for developers and students who want to follow Object-Oriented Software Engineering (OOSE) principles. If you\'re building software and want to properly document what it should do, test it, and track coverage - this is for you.'
+      a: 'InitPhase is an AI-powered project management workspace designed for developers and students who want to follow Object-Oriented Software Engineering (OOSE) principles. Whether you\'re building software for a class project or a production app, InitPhase handles everything from turning rough ideas into structured BRDs, all the way through test execution and documentation export.'
     },
     {
       q: 'Do I need to know OOSE to use this?',
-      a: 'Not at all. InitPhase is specifically designed for beginners. The app guides you through each step: first define requirements, then write test cases, and finally view your traceability matrix. Each module explains what it does in simple terms.'
+      a: 'Not at all. InitPhase is specifically designed for beginners. The app guides you through each step: brainstorm an idea with AI, define requirements, write test cases, and view your traceability matrix. Each module explains what it does in simple terms.'
     },
     {
       q: 'Is this free to use?',
-      a: 'Yes, InitPhase is completely free. Create an account, start a project, and use all features without any restrictions or paywalls.'
+      a: 'Yes, InitPhase is completely free — including all AI-powered features. Create an account, start a project, and use all features without any restrictions or paywalls.'
     },
     {
       q: 'Can I use this for college assignments and portfolios?',
-      a: 'Absolutely. InitPhase is perfect for academic projects where you need to demonstrate proper software engineering processes. It helps you create professional documentation that shows structured planning and testing.'
+      a: 'Absolutely. InitPhase is perfect for academic projects where you need to demonstrate proper software engineering processes. It helps you create professional documentation that shows structured planning and testing — complete with AI-generated BRDs and exportable PDFs.'
+    },
+    {
+      q: 'How does the AI work?',
+      a: 'InitPhase uses Groq-powered LLMs (Llama 3.1) on the backend. When you submit a rough idea, the AI structures it into a full Business Requirement Document with stakeholders, risks, and functional specs. For Change Impact Analysis, it scans your GitHub repo and predicts which files are affected by a proposed change — including cost estimates. All AI outputs are normalized and validated server-side.'
+    },
+    {
+      q: 'Can I connect my GitHub repository?',
+      a: 'Yes! The Change Impact Analyzer lets you paste any public GitHub repo URL. InitPhase fetches the repo structure, identifies key files (routes, controllers, models, pages), and generates an architecture summary using AI. You can then describe a change request, and it predicts affected files, complexity, and engineering cost.'
     },
     {
       q: 'What technologies does InitPhase use?',
-      a: 'InitPhase is built with React on the frontend, Node.js/Express on the backend, and MongoDB as the database. It uses JWT authentication for secure access and is deployed on Vercel and Render.'
+      a: 'InitPhase is built with React on the frontend, Node.js/Express on the backend, and MongoDB as the database. It uses JWT authentication for secure access, Groq API for AI features, and the GitHub API for repository analysis. Deployed on Vercel and Render.'
     }
   ];
 
@@ -140,6 +149,18 @@ export default function Landing() {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes aiGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(168,85,247,0.15), inset 0 0 15px rgba(168,85,247,0.05); }
+      50% { box-shadow: 0 0 25px rgba(168,85,247,0.25), inset 0 0 25px rgba(168,85,247,0.08); }
+    }
+    @keyframes typeReveal {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes sparkle {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+      50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+    }
     .hero-badge { animation: fadeInUp 0.6s ease-out 0.1s both; }
     .hero-title { animation: fadeInUp 0.6s ease-out 0.25s both; }
     .hero-desc { animation: fadeInUp 0.6s ease-out 0.4s both; }
@@ -151,7 +172,9 @@ export default function Landing() {
     .dash-stat-card:nth-child(3) { animation-delay: 1s; }
     .ring-progress { animation: ringDraw 1.8s ease-out 0.8s both; }
     .bar-anim { animation: barGrow 1.2s ease-out 0.6s both; }
-    .ticker-track { animation: tickerSlide 20s linear infinite; }
+    .ticker-track { animation: tickerSlide 25s linear infinite; }
+    .ai-glow-card { }
+    .ai-sparkle { animation: sparkle 2s ease-in-out infinite; }
     @media (max-width: 968px) {
       .landing-hero-grid {
         grid-template-columns: 1fr !important;
@@ -188,6 +211,9 @@ export default function Landing() {
       }
       .hero-glow-2 {
         display: none !important;
+      }
+      .ai-spotlight-grid {
+        grid-template-columns: 1fr !important;
       }
     }
     @media (max-width: 640px) {
@@ -326,11 +352,11 @@ export default function Landing() {
           pointerEvents: 'none'
         }} />
 
-        {/* ── Secondary accent glow (right side, tinted) ── */}
+        {/* ── Secondary accent glow (right side, AI purple tint) ── */}
         <div className="hero-glow-2" style={{ 
           position: 'absolute', top: '60px', right: '-120px',
           width: '600px', height: '500px', 
-          background: 'radial-gradient(ellipse, rgba(168, 85, 247, 0.04) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse, rgba(168, 85, 247, 0.06) 0%, transparent 60%)',
           pointerEvents: 'none'
         }} />
 
@@ -338,28 +364,41 @@ export default function Landing() {
           
           {/* ══ LEFT: Text & CTA ══ */}
           <div>
-            <div className="hero-badge" style={{ 
-              display: 'inline-flex', alignItems: 'center', gap: '7px',
-              padding: '5px 14px', backgroundColor: 'rgba(255,255,255,0.05)', 
-              border: '1px solid rgba(255,255,255,0.1)', borderRadius: '9999px', 
-              fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '20px', fontWeight: '500'
-            }}>
-              <div style={{ width: '6px', height: '6px', backgroundColor: '#10b981', borderRadius: '50%', boxShadow: '0 0 8px #10b981' }} />
-              Open Source &amp; Free
+            {/* Badges row */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+              <div className="hero-badge" style={{ 
+                display: 'inline-flex', alignItems: 'center', gap: '7px',
+                padding: '5px 14px', backgroundColor: 'rgba(255,255,255,0.05)', 
+                border: '1px solid rgba(255,255,255,0.1)', borderRadius: '9999px', 
+                fontSize: '0.75rem', color: '#a1a1aa', fontWeight: '500'
+              }}>
+                <div style={{ width: '6px', height: '6px', backgroundColor: '#10b981', borderRadius: '50%', boxShadow: '0 0 8px #10b981' }} />
+                Open Source &amp; Free
+              </div>
+              <div className="hero-badge" style={{ 
+                display: 'inline-flex', alignItems: 'center', gap: '7px',
+                padding: '5px 14px', 
+                backgroundColor: 'rgba(168,85,247,0.08)', 
+                border: '1px solid rgba(168,85,247,0.2)', borderRadius: '9999px', 
+                fontSize: '0.75rem', color: '#c084fc', fontWeight: '500'
+              }}>
+                <Sparkles size={12} className="ai-sparkle" />
+                AI-Powered
+              </div>
             </div>
 
             <h1 className="hero-title" style={{ 
               fontSize: 'clamp(1.9rem, 3.8vw, 3.2rem)', fontWeight: '800', fontFamily: 'var(--font-heading)', 
               lineHeight: '1.08', letterSpacing: '-0.04em', color: '#fafafa', marginBottom: '18px'
             }}>
-              The Operating System <br/>for Software Engineering.
+              AI-Powered Software<br/>Engineering, Idea to Ship.
             </h1>
 
             <p className="hero-desc" style={{ 
               fontSize: 'clamp(0.88rem, 1.3vw, 1rem)', color: '#a1a1aa', lineHeight: '1.65', 
               marginBottom: '28px', maxWidth: '440px'
             }}>
-              A comprehensive SaaS workspace to define priorities, trace test execution, diagram sequence flows, and track internal bugs seamlessly. Built for scale.
+              Turn rough ideas into structured BRDs with AI, define requirements, trace test execution, diagram sequence flows, analyze change impact on GitHub repos, and export documentation — all in one workspace.
             </p>
 
             <div className="hero-cta" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -442,7 +481,7 @@ export default function Landing() {
                 {/* ── Stat cards with shimmer ── */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '10px' }}>
                   {[
-                    { label: 'Requirements', value: '12', sub: '+3 this sprint', color: '#e4e4e7' },
+                    { label: 'Requirements', value: '12', sub: '+3 from AI BRD', color: '#e4e4e7' },
                     { label: 'Test Cases', value: '28', sub: '24 automated', color: '#a855f7' },
                     { label: 'Coverage', value: '100%', sub: 'All mapped', color: '#10b981' },
                   ].map((s, i) => (
@@ -518,7 +557,7 @@ export default function Landing() {
                   </div>
                 </div>
 
-                {/* ── Requirements Table (mini) ── */}
+                {/* ── Requirements Table (mini) with AI badge ── */}
                 <div style={{ 
                   marginBottom: '8px', backgroundColor: 'rgba(255,255,255,0.015)', 
                   border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', overflow: 'hidden'
@@ -529,7 +568,10 @@ export default function Landing() {
                     padding: '5px 10px', borderBottom: '1px solid rgba(255,255,255,0.04)',
                     backgroundColor: 'rgba(255,255,255,0.02)'
                   }}>
-                    <span style={{ fontSize: '0.52rem', fontWeight: '700', color: '#52525b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Requirement</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <span style={{ fontSize: '0.52rem', fontWeight: '700', color: '#52525b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Requirement</span>
+                      <Sparkles size={8} color="#a855f7" style={{ opacity: 0.6 }} />
+                    </div>
                     <span style={{ fontSize: '0.52rem', fontWeight: '700', color: '#52525b', textTransform: 'uppercase', letterSpacing: '0.08em', textAlign: 'center' }}>Priority</span>
                     <span style={{ fontSize: '0.52rem', fontWeight: '700', color: '#52525b', textTransform: 'uppercase', letterSpacing: '0.08em', textAlign: 'center' }}>Tests</span>
                   </div>
@@ -565,7 +607,7 @@ export default function Landing() {
                   ))}
                 </div>
 
-                {/* ── Activity ticker ── */}
+                {/* ── Activity ticker (updated with AI events) ── */}
                 <div style={{ 
                   marginBottom: '8px', overflow: 'hidden', borderRadius: '6px',
                   backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
@@ -573,16 +615,18 @@ export default function Landing() {
                 }}>
                   <div className="ticker-track" style={{ display: 'flex', gap: '28px', whiteSpace: 'nowrap', width: 'max-content', alignItems: 'center' }}>
                     {[
+                      { icon: Sparkles, color: '#a855f7', text: 'BRD generated from idea in 3s' },
                       { icon: CheckCircle, color: '#10b981', text: 'Test "Login redirect" passed' },
+                      { icon: SearchCode, color: '#3b82f6', text: 'Change impact: 4 files affected' },
                       { icon: Plus, color: '#a855f7', text: 'Requirement "Wishlist" added' },
                       { icon: XCircle, color: '#ef4444', text: 'Test "Tax calc" failed' },
                       { icon: RefreshCw, color: '#f59e0b', text: 'Status changed to Pass' },
                       { icon: CheckCircle, color: '#10b981', text: 'Coverage reached 100%' },
+                      { icon: Sparkles, color: '#a855f7', text: 'BRD generated from idea in 3s' },
                       { icon: CheckCircle, color: '#10b981', text: 'Test "Login redirect" passed' },
+                      { icon: SearchCode, color: '#3b82f6', text: 'Change impact: 4 files affected' },
                       { icon: Plus, color: '#a855f7', text: 'Requirement "Wishlist" added' },
                       { icon: XCircle, color: '#ef4444', text: 'Test "Tax calc" failed' },
-                      { icon: RefreshCw, color: '#f59e0b', text: 'Status changed to Pass' },
-                      { icon: CheckCircle, color: '#10b981', text: 'Coverage reached 100%' },
                     ].map((item, i) => (
                       <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.6rem', color: '#3f3f46', fontWeight: '500' }}>
                         <item.icon size={10} color={item.color} />
@@ -622,16 +666,17 @@ export default function Landing() {
       }}>
         <div style={{ 
           display: 'flex', justifyContent: 'center', gap: 'clamp(20px, 4vw, 48px)', flexWrap: 'wrap', 
-          maxWidth: '800px', margin: '0 auto', alignItems: 'center'
+          maxWidth: '900px', margin: '0 auto', alignItems: 'center'
         }}>
           {[
+            { icon: Sparkles, text: 'AI-Powered' },
             { icon: CheckCircle, text: 'OOSE Compliant' },
             { icon: Zap, text: 'Free Forever' },
             { icon: Shield, text: 'Secure Auth' },
             { icon: Eye, text: 'Real-time Tracking' }
           ].map((item, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#71717a', fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              <item.icon size={13} color="#52525b" />
+              <item.icon size={13} color={i === 0 ? '#a855f7' : '#52525b'} />
               <span>{item.text}</span>
             </div>
           ))}
@@ -678,6 +723,125 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ═══════════════ AI SPOTLIGHT SECTION ═══════════════ */}
+      <section className="section-padding" style={{
+        padding: 'clamp(60px, 10vw, 100px) 24px',
+        borderTop: '1px solid rgba(255,255,255,0.04)',
+        position: 'relative', overflow: 'hidden'
+      }}>
+        {/* Subtle purple glow behind the section */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          width: '800px', height: '600px',
+          background: 'radial-gradient(ellipse, rgba(168,85,247,0.04) 0%, transparent 70%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <AnimatedSection>
+            <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+              <div style={{ 
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                padding: '6px 16px', backgroundColor: 'rgba(168,85,247,0.08)',
+                border: '1px solid rgba(168,85,247,0.2)', borderRadius: '9999px',
+                fontSize: '0.8rem', fontWeight: '700', color: '#c084fc', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px'
+              }}>
+                <BrainCircuit size={14} />
+                AI That Actually Helps
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-heading)', fontWeight: '800', marginBottom: '16px', lineHeight: '1.2', letterSpacing: '-0.02em' }}>
+                From rough idea to structured BRD.<br/>From change request to impact report.
+              </h2>
+              <p style={{ color: '#a1a1aa', fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto' }}>
+                InitPhase integrates AI directly into your software engineering workflow — not as a gimmick, but as a real productivity multiplier.
+              </p>
+            </div>
+          </AnimatedSection>
+
+          <div className="ai-spotlight-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            {/* AI Feature 1: Idea → BRD */}
+            <AnimatedSection delay={0.1}>
+              <div className="ai-glow-card" style={{
+                padding: '28px', backgroundColor: '#0d0d10',
+                border: '1px solid rgba(168,85,247,0.15)', borderRadius: '14px',
+                height: '100%', boxSizing: 'border-box'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+                  <div style={{
+                    width: '36px', height: '36px', borderRadius: '10px',
+                    background: 'linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.05))',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    border: '1px solid rgba(168,85,247,0.2)'
+                  }}>
+                    <Sparkles size={18} color="#a855f7" />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '1.05rem', fontWeight: '700', fontFamily: 'var(--font-heading)', color: '#e4e4e7', margin: 0 }}>Idea → BRD Generator</h4>
+                    <span style={{ fontSize: '0.7rem', color: '#a855f7', fontWeight: '600' }}>Powered by Llama 3.1</span>
+                  </div>
+                </div>
+                <p style={{ color: '#a1a1aa', fontSize: '0.9rem', lineHeight: '1.6', margin: '0 0 20px 0' }}>
+                  Paste a rough product idea. AI generates a complete Business Requirement Document — executive summary, stakeholders, functional requirements with priorities, risks, and success metrics.
+                </p>
+
+                {/* Mini BRD preview */}
+                <div style={{
+                  padding: '12px', backgroundColor: 'rgba(255,255,255,0.02)',
+                  border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px',
+                  fontFamily: 'monospace', fontSize: '0.68rem', color: '#71717a', lineHeight: '1.7'
+                }}>
+                  <div style={{ color: '#a855f7', fontWeight: '700', marginBottom: '4px' }}>AI Output Preview</div>
+                  <div><span style={{ color: '#52525b' }}>Executive Summary:</span> "A mobile-first..."</div>
+                  <div><span style={{ color: '#52525b' }}>Stakeholders:</span> Product Team, QA Lead</div>
+                  <div><span style={{ color: '#52525b' }}>Functional Reqs:</span> 6 items (3 Must-Have)</div>
+                  <div><span style={{ color: '#52525b' }}>Risks:</span> 2 identified</div>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            {/* AI Feature 2: Change Impact */}
+            <AnimatedSection delay={0.2}>
+              <div className="ai-glow-card" style={{
+                padding: '28px', backgroundColor: '#0d0d10',
+                border: '1px solid rgba(59,130,246,0.15)', borderRadius: '14px',
+                height: '100%', boxSizing: 'border-box'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+                  <div style={{
+                    width: '36px', height: '36px', borderRadius: '10px',
+                    background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.05))',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    border: '1px solid rgba(59,130,246,0.2)'
+                  }}>
+                    <SearchCode size={18} color="#3b82f6" />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '1.05rem', fontWeight: '700', fontFamily: 'var(--font-heading)', color: '#e4e4e7', margin: 0 }}>Change Impact Analyzer</h4>
+                    <span style={{ fontSize: '0.7rem', color: '#3b82f6', fontWeight: '600' }}>GitHub + AI Analysis</span>
+                  </div>
+                </div>
+                <p style={{ color: '#a1a1aa', fontSize: '0.9rem', lineHeight: '1.6', margin: '0 0 20px 0' }}>
+                  Link any public GitHub repo. AI scans the architecture, then predicts which files a change request will affect — with complexity rating, estimated hours, and cost analysis.
+                </p>
+
+                {/* Mini impact preview */}
+                <div style={{
+                  padding: '12px', backgroundColor: 'rgba(255,255,255,0.02)',
+                  border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px',
+                  fontFamily: 'monospace', fontSize: '0.68rem', color: '#71717a', lineHeight: '1.7'
+                }}>
+                  <div style={{ color: '#3b82f6', fontWeight: '700', marginBottom: '4px' }}>Impact Report Preview</div>
+                  <div><span style={{ color: '#52525b' }}>Complexity:</span> <span style={{ color: '#f59e0b' }}>Medium</span></div>
+                  <div><span style={{ color: '#52525b' }}>Affected Files:</span> 4 (routes, controller, model, page)</div>
+                  <div><span style={{ color: '#52525b' }}>Estimated Hours:</span> 4-16h</div>
+                  <div><span style={{ color: '#52525b' }}>Estimated Cost:</span> $250 - $1,200</div>
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
       {/* ═══════════════ HOW IT WORKS ═══════════════ */}
       <section id="how-it-works" className="section-padding" style={{ 
         padding: 'clamp(60px, 10vw, 100px) 24px',
@@ -690,10 +854,10 @@ export default function Landing() {
                 How It Works
               </div>
               <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-heading)', fontWeight: '800', marginBottom: '16px', lineHeight: '1.2', letterSpacing: '-0.02em' }}>
-                Complete Lifecycle Management.
+                AI-Assisted Lifecycle Management.
               </h2>
               <p style={{ color: '#a1a1aa', fontSize: '1.05rem', maxWidth: '500px', margin: '0 auto' }}>
-                InitPhase guides you through the proper software engineering process - no prior knowledge required.
+                InitPhase guides you through the complete software engineering process — from brainstorming with AI to shipping with confidence.
               </p>
             </div>
           </AnimatedSection>
@@ -703,42 +867,63 @@ export default function Landing() {
             {/* Vertical line - hidden on mobile via CSS class or handled via before */}
             <div className="timeline-line" style={{ 
               position: 'absolute', left: '23px', top: '36px', bottom: '36px', width: '1px', 
-              background: 'linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.04))'
+              background: 'linear-gradient(to bottom, rgba(168,85,247,0.3), rgba(255,255,255,0.1), rgba(16,185,129,0.3))'
             }} />
 
             {[
               {
-                num: '01', icon: ListTodo, color: '#e4e4e7',
+                num: '01', icon: Sparkles, color: '#a855f7',
+                title: 'Brainstorm with AI',
+                desc: 'Describe your rough product idea in plain language. AI transforms it into a structured Business Requirement Document with stakeholders, scope, risks, and prioritized functional requirements.',
+                detail: '"I want a food delivery app" → Full BRD in 3 seconds',
+                isAi: true
+              },
+              {
+                num: '02', icon: ArrowRight, color: '#c084fc',
+                title: 'Push Requirements from BRD',
+                desc: 'One-click push from your AI-generated BRD directly into the Requirements module. Each functional requirement lands with its priority already set — no manual re-entry.',
+                detail: 'BRD → Push All → 6 Requirements Created',
+                isAi: true
+              },
+              {
+                num: '03', icon: ListTodo, color: '#e4e4e7',
                 title: 'Define Your Requirements',
-                desc: 'Start by listing what your software needs to do. Each requirement gets a priority level - Must-Have, Should-Have, or Nice-to-Have, setting a strong baseline.',
+                desc: 'Fine-tune, add, or manually author requirements. Each gets a priority level — Must-Have, Should-Have, or Nice-to-Have, setting a strong baseline.',
                 detail: '"System must calculate geo-tax" -> Must-Have'
               },
               {
-                num: '02', icon: GitMerge, color: '#3b82f6',
+                num: '04', icon: GitMerge, color: '#3b82f6',
                 title: 'Model Sequence Flows',
                 desc: 'Visually map out how your system architecture will handle requests using our built-in Sequence Diagram builder before a single line of code is written.',
                 detail: 'Client -> API -> Database -> Return Response'
               },
               {
-                num: '03', icon: FlaskConical, color: '#a855f7',
+                num: '05', icon: FlaskConical, color: '#a855f7',
                 title: 'Execute Verification Tests',
                 desc: 'Create rigid test cases tethered directly to your requirements. Execute them simulating real workflows to ensure exact functionality passes without errors.',
                 detail: 'Test #23: Validate Tax Calculation -> PASSED'
               },
               {
-                num: '04', icon: Kanban, color: '#f59e0b',
+                num: '06', icon: Kanban, color: '#f59e0b',
                 title: 'Track Bugs via Kanban',
                 desc: 'When tests fail, drag and drop bugs directly into the integrated issues tracker. Assign them to your team natively within your workspace environment.',
                 detail: 'Move "Timeout Bug" -> In Progress'
               },
               {
-                num: '05', icon: Network, color: '#10b981',
+                num: '07', icon: Network, color: '#10b981',
                 title: 'Trace Everything Back',
                 desc: 'Ensure compliance before launch. InitPhase auto-calculates total requirement coverage and instantly alerts you if an original specification was never tested.',
                 detail: 'Coverage calculation complete: 100% Ready'
+              },
+              {
+                num: '08', icon: SearchCode, color: '#3b82f6',
+                title: 'Analyze Change Impact',
+                desc: 'Link your GitHub repo and describe any proposed change. AI scans the codebase, predicts affected files, and estimates engineering hours and cost — before you write a single line.',
+                detail: '"Add PayPal" → 4 files affected, ~$800, Medium complexity',
+                isAi: true
               }
             ].map((step, i) => (
-              <AnimatedSection key={i} delay={i * 0.12}>
+              <AnimatedSection key={i} delay={i * 0.1}>
                 <div className="how-it-works-item" style={{ 
                   display: 'flex', gap: '24px', padding: '28px 0', alignItems: 'flex-start'
                 }}>
@@ -761,7 +946,7 @@ export default function Landing() {
                     <p style={{ color: '#a1a1aa', fontSize: '0.95rem', lineHeight: '1.7', margin: '0 0 14px 0' }}>{step.desc}</p>
                     <div style={{ 
                       display: 'inline-block', padding: '8px 14px', backgroundColor: 'rgba(255,255,255,0.04)', 
-                      border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px',
+                      border: `1px solid ${step.isAi ? 'rgba(168,85,247,0.15)' : 'rgba(255,255,255,0.08)'}`, borderRadius: '8px',
                       fontFamily: 'monospace', fontSize: '0.8rem', color: '#71717a'
                     }}>
                       {step.detail}
@@ -794,21 +979,26 @@ export default function Landing() {
 
           <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
             {[
-              { icon: FileText, title: 'Requirements Manager', desc: 'Capture business needs with custom priority levels. Structure your exact functional expectations before writing a single line of code.' },
+              { icon: Sparkles, title: 'AI Idea → BRD', desc: 'Paste a rough idea. AI generates a production-ready Business Requirement Document with stakeholders, scope, risks, and success metrics — in seconds.', isAi: true },
+              { icon: FileText, title: 'Requirements Manager', desc: 'Capture business needs with custom priority levels. Push directly from AI-generated BRDs or author manually. Structure your exact functional expectations.' },
               { icon: GitMerge, title: 'Visual Sequence Flows', desc: 'Design system interactions via an intuitive UI builder. Auto-renders into beautiful cross-system architectural diagrams.' },
               { icon: FlaskConical, title: 'Test Execution Engine', desc: 'Map dedicated verification tests directly against your requirements. Execute workflows and log specific pass/fail telemetry.' },
               { icon: Network, title: 'Live Traceability Matrix', desc: 'Real-time Analytics Dashboard that calculates test coverage percentages and specifically isolates unverified requirements.' },
               { icon: Kanban, title: 'Integrated Issue Tracker', desc: 'A built-in HTML5 drag-and-drop Kanban board designed for tracking localized sprint tasks, bugs, and enhancements.' },
-              { icon: FileDown, title: 'Documentation Export', desc: 'Automated generation of your entire Software Test Document (STD) packaged cleanly into structured, presentation-ready files.' }
+              { icon: Globe, title: 'GitHub Repo Analyzer', desc: 'Link any public GitHub repo. AI scans the codebase, identifies the tech stack, architecture, and maps important files automatically.', isAi: true },
+              { icon: DollarSign, title: 'Change Impact & Cost', desc: 'Describe a change request. AI predicts affected files, estimates engineering hours, and calculates cost — grounded in your actual codebase.', isAi: true },
+              { icon: FileDown, title: 'Documentation Export', desc: 'Automated generation of your entire Software Test Document (STD) with visual sequence diagrams, packaged into structured, PDF-ready files.' }
             ].map((f, i) => (
               <AnimatedSection key={i} delay={(i % 3) * 0.08}>
                 <div style={{ 
-                  padding: '28px', backgroundColor: '#111113', border: '1px solid rgba(255,255,255,0.06)', 
-                  borderRadius: '14px', transition: 'all 0.3s', cursor: 'default', height: '100%', boxSizing: 'border-box'
+                  padding: '28px', backgroundColor: '#111113', 
+                  border: `1px solid ${f.isAi ? 'rgba(168,85,247,0.12)' : 'rgba(255,255,255,0.06)'}`, 
+                  borderRadius: '14px', transition: 'all 0.3s', cursor: 'default', height: '100%', boxSizing: 'border-box',
+                  position: 'relative', overflow: 'hidden'
                 }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-                  <f.icon size={22} color="#71717a" style={{ marginBottom: '16px' }} />
+                onMouseOver={e => { e.currentTarget.style.borderColor = f.isAi ? 'rgba(168,85,247,0.3)' : 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
+                onMouseOut={e => { e.currentTarget.style.borderColor = f.isAi ? 'rgba(168,85,247,0.12)' : 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                  <f.icon size={22} color={f.isAi ? '#a855f7' : '#71717a'} style={{ marginBottom: '16px' }} />
                   <h4 style={{ fontSize: '1.05rem', fontWeight: '700', marginBottom: '8px', fontFamily: 'var(--font-heading)', color: '#e4e4e7' }}>{f.title}</h4>
                   <p style={{ color: '#a1a1aa', fontSize: '0.9rem', lineHeight: '1.6', margin: 0 }}>{f.desc}</p>
                 </div>
@@ -895,7 +1085,7 @@ export default function Landing() {
             Ready to build software<br/>the right way?
           </h2>
           <p style={{ color: '#a1a1aa', fontSize: '1.05rem', marginBottom: '36px', lineHeight: '1.6' }}>
-            Create a free account and start structuring your project in under 2 minutes.
+            Create a free account and start structuring your project with AI in under 2 minutes.
           </p>
           <Link to="/register" style={{ textDecoration: 'none' }}>
             <button className="cta-glow-btn" style={{ 
@@ -909,7 +1099,7 @@ export default function Landing() {
             </button>
           </Link>
           <p style={{ marginTop: '16px', color: '#71717a', fontSize: '0.85rem' }}>
-            No credit card required. No limits.
+            No credit card required. No limits. AI included.
           </p>
         </AnimatedSection>
       </section>
