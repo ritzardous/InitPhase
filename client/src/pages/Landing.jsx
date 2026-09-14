@@ -7,6 +7,7 @@ import {
   XCircle, RefreshCw, Plus, GitMerge, FileDown, Kanban,
   Sparkles, BrainCircuit, DollarSign, SearchCode, Globe, Bot
 } from 'lucide-react';
+import { warmupBackend } from '../utils/warmupBackend';
 
 /* ═══════════ CUSTOM LOGO SVG ═══════════ */
 function InitPhaseMark({ size = 28, dark = false }) {
@@ -71,6 +72,10 @@ function AnimatedSection({ children, delay = 0, style = {} }) {
 /* ═══════════ MAIN COMPONENT ═══════════ */
 export default function Landing() {
   const [openFaq, setOpenFaq] = useState(null);
+
+  useEffect(() => {
+    warmupBackend();
+  }, []);
 
   const faqs = [
     {

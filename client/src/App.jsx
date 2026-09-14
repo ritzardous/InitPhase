@@ -1,6 +1,5 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
 import Landing from './pages/Landing';
 import LoadingState from './components/LoadingState';
 import { ToastProvider } from './components/ToastProvider';
@@ -8,6 +7,7 @@ import { ToastProvider } from './components/ToastProvider';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import registerBg from './assets/register-bg-2.jpg';
+import { warmupBackend } from './utils/warmupBackend';
 
 // Lazy load enterprise modules for performance
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -21,6 +21,7 @@ const DocumentationModule = lazy(() => import('./pages/DocumentationModule'));
 const IssuesModule = lazy(() => import('./pages/IssuesModule'));
 const IdeaBrdModule = lazy(() => import('./pages/IdeaBrdModule'));
 const ChangeImpactModule = lazy(() => import('./pages/ChangeImpactModule'));
+
 function LoadingFallback() {
   return <LoadingState title="Opening InitPhase" />;
 }
@@ -52,11 +53,20 @@ function ImagePreloader() {
   return null;
 }
 
+// Wake up Render backend as early as possible when any part of frontend loads
+function BackendWarmup() {
+  useEffect(() => {
+    warmupBackend();
+  }, []);
+  return null;
+}
+
 function App() {
   return (
     <div className="enterprise-app">
       <ToastProvider>
         <BrowserRouter>
+          <BackendWarmup />
           <ScrollToTop />
           <ImagePreloader />
           <Routes>
