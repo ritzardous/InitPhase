@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import registerBg from './assets/register-bg-2.jpg';
 import { warmupBackend } from './utils/warmupBackend';
+import './App.css';
 
 // Lazy load enterprise modules for performance
 const Dashboard = lazy(() => import('./pages/Dashboard'));

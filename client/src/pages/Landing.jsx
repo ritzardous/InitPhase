@@ -7,7 +7,6 @@ import {
   XCircle, RefreshCw, Plus, GitMerge, FileDown, Kanban,
   Sparkles, BrainCircuit, DollarSign, SearchCode, Globe, Bot
 } from 'lucide-react';
-import { warmupBackend } from '../utils/warmupBackend';
 
 /* ═══════════ CUSTOM LOGO SVG ═══════════ */
 function InitPhaseMark({ size = 28, dark = false }) {
@@ -73,10 +72,6 @@ function AnimatedSection({ children, delay = 0, style = {} }) {
 export default function Landing() {
   const [openFaq, setOpenFaq] = useState(null);
 
-  useEffect(() => {
-    warmupBackend();
-  }, []);
-
   const faqs = [
     {
       q: 'What is InitPhase and who is it for?',
@@ -108,171 +103,6 @@ export default function Landing() {
     }
   ];
 
-  /* Inline keyframes for animations */
-  const animationStyles = `
-    @keyframes heroFloat {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-    @keyframes subtlePulse {
-      0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.08); }
-      50% { box-shadow: 0 0 30px rgba(255,255,255,0.14); }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-    @keyframes ringDraw {
-      from { stroke-dashoffset: 251; }
-      to { stroke-dashoffset: 0; }
-    }
-    @keyframes barGrow {
-      from { width: 0%; }
-    }
-    @keyframes shimmerBorder {
-      0% { border-color: rgba(255,255,255,0.06); }
-      50% { border-color: rgba(255,255,255,0.14); }
-      100% { border-color: rgba(255,255,255,0.06); }
-    }
-    @keyframes dotPulse {
-      0%, 100% { opacity: 0.03; }
-      50% { opacity: 0.07; }
-    }
-    @keyframes tickerSlide {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
-    @keyframes glowPulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
-    @keyframes countUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes aiGlow {
-      0%, 100% { box-shadow: 0 0 15px rgba(168,85,247,0.15), inset 0 0 15px rgba(168,85,247,0.05); }
-      50% { box-shadow: 0 0 25px rgba(168,85,247,0.25), inset 0 0 25px rgba(168,85,247,0.08); }
-    }
-    @keyframes typeReveal {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    @keyframes sparkle {
-      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
-      50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
-    }
-    .hero-badge { animation: fadeInUp 0.6s ease-out 0.1s both; }
-    .hero-title { animation: fadeInUp 0.6s ease-out 0.25s both; }
-    .hero-desc { animation: fadeInUp 0.6s ease-out 0.4s both; }
-    .hero-cta { animation: fadeInUp 0.6s ease-out 0.55s both; }
-    .hero-terminal { animation: fadeInUp 0.8s ease-out 0.4s both; }
-    .cta-glow-btn { animation: subtlePulse 3s ease-in-out infinite; }
-    .dash-stat-card { animation: shimmerBorder 4s ease-in-out infinite; }
-    .dash-stat-card:nth-child(2) { animation-delay: 0.5s; }
-    .dash-stat-card:nth-child(3) { animation-delay: 1s; }
-    .ring-progress { animation: ringDraw 1.8s ease-out 0.8s both; }
-    .bar-anim { animation: barGrow 1.2s ease-out 0.6s both; }
-    .ticker-track { animation: tickerSlide 25s linear infinite; }
-    .ai-glow-card { }
-    .ai-sparkle { animation: sparkle 2s ease-in-out infinite; }
-    @media (max-width: 968px) {
-      .landing-hero-grid {
-        grid-template-columns: 1fr !important;
-        gap: 32px !important;
-        text-align: center;
-      }
-      .hero-title {
-        margin-left: auto !important;
-        margin-right: auto !important;
-        max-width: 600px !important;
-      }
-      .hero-title br {
-        display: none !important;
-      }
-      .hero-desc {
-        margin-left: auto !important;
-        margin-right: auto !important;
-        max-width: 100% !important;
-      }
-      .hero-cta {
-        flex-direction: column !important;
-        align-items: center !important;
-        width: 100% !important;
-      }
-      .hero-cta button, .hero-cta a {
-        width: 100% !important;
-        justify-content: center !important;
-      }
-      .hero-glow {
-        left: 50% !important;
-        top: -100px !important;
-        width: 400px !important;
-        height: 400px !important;
-      }
-      .hero-glow-2 {
-        display: none !important;
-      }
-      .ai-spotlight-grid {
-        grid-template-columns: 1fr !important;
-      }
-    }
-    @media (max-width: 640px) {
-      .responsive-nav {
-        padding: 12px 16px !important;
-      }
-      .hide-mobile {
-        display: none !important;
-      }
-      .section-padding {
-        padding: 48px 20px !important;
-      }
-      .hero-section {
-        padding-top: 40px !important;
-        padding-bottom: 40px !important;
-      }
-      .how-it-works-content {
-        gap: 24px !important;
-        padding-top: 10px !important;
-      }
-      .how-it-works-content::before {
-        display: none !important;
-      }
-      .timeline-line {
-        display: none !important;
-      }
-      .how-it-works-item {
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
-        gap: 12px !important;
-        padding: 20px 0 !important;
-      }
-      /* Centering content for mobile step details */
-      .how-it-works-item > div {
-        align-items: center !important;
-        display: flex !important;
-        flex-direction: column !important;
-      }
-      h2 {
-        font-size: 1.8rem !important;
-      }
-      .landing-footer {
-        flex-direction: column !important;
-        text-align: center !important;
-        gap: 24px !important;
-      }
-      .footer-links {
-        flex-direction: column !important;
-        width: 100% !important;
-      }
-    }
-  `;
-
   /* SVG coverage ring helper */
   const coveragePercent = 100;
   const ringRadius = 40;
@@ -281,7 +111,6 @@ export default function Landing() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#09090b', color: '#fafafa' }}>
-      <style dangerouslySetInnerHTML={{ __html: animationStyles }} />
       
       {/* ═══════════════ NAVBAR ═══════════════ */}
       <nav className="responsive-nav" style={{ 

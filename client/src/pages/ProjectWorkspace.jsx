@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, NavLink, Outlet, Link, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { CheckCircle2, Circle, FileText, FlaskConical, GitMerge, LayoutDashboard, ListTodo, LogOut, Menu, Network, SearchCode, Sparkles, Ticket, X } from 'lucide-react';
 import Button from '../components/Button';
 import LoadingState from '../components/LoadingState';
@@ -190,7 +190,7 @@ export default function ProjectWorkspace() {
       ? 'Ready for docs'
       : `${coveragePct}% covered`;
 
-  const navLinkStyle = ({ isActive }) => ({
+  const navLinkStyle = (isActive) => ({
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
@@ -200,10 +200,31 @@ export default function ProjectWorkspace() {
     textDecoration: 'none',
     fontWeight: isActive ? '600' : '500',
     borderLeft: isActive ? '4px solid var(--accent-color)' : '4px solid transparent',
+    borderTop: 'none',
+    borderRight: 'none',
+    borderBottom: 'none',
     transition: 'all 0.2s ease-in-out',
     margin: '4px 16px 4px 0',
-    borderRadius: '0 var(--radius-md) var(--radius-md) 0'
+    borderRadius: '0 var(--radius-md) var(--radius-md) 0',
+    width: 'calc(100% - 16px)',
+    textAlign: 'left',
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    fontSize: '0.95rem',
+    outline: 'none',
   });
+
+  const navItems = [
+    { key: 'overview', label: 'Dashboard', icon: LayoutDashboard, badge: <CompletionBadge complete /> },
+    { key: 'idea-brd', label: 'Idea to BRD', icon: Sparkles, badge: <CompletionBadge complete={brds.length > 0} /> },
+    { key: 'requirements', label: 'Requirements', icon: ListTodo, badge: <CompletionBadge complete={requirements.length > 0} /> },
+    { key: 'sequence', label: 'Sequence Flow', icon: GitMerge, badge: <CompletionBadge complete={sequenceFlows.length > 0} /> },
+    { key: 'testcases', label: 'Test Execution', icon: FlaskConical, badge: <CompletionBadge complete={testCases.length > 0} /> },
+    { key: 'issues', label: 'Issues', icon: Ticket, badge: <CompletionBadge complete={openIssues === 0 && criticalIssues === 0} /> },
+    { key: 'rtm', label: 'Analytics Matrix', icon: Network, badge: <CompletionBadge complete={coveragePct === 100 && requirements.length > 0} /> },
+    { key: 'change-impact', label: 'Change Impact', icon: SearchCode },
+    { key: 'documentation', label: 'Documentation', icon: FileText, badge: <CompletionBadge complete={requirements.length > 0 && coveragePct === 100} /> },
+  ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', backgroundColor: 'var(--bg-base)' }}>
@@ -213,7 +234,7 @@ export default function ProjectWorkspace() {
         alignItems: 'center', 
         padding: '0 32px', 
         backgroundColor: 'var(--bg-surface)', 
-        borderBottom: '1px solid var(--border-color)',
+        borderBottom: '1px solid var(--border-color)', 
         color: 'var(--text-primary)', 
         height: '64px', 
         zIndex: 10
@@ -223,10 +244,10 @@ export default function ProjectWorkspace() {
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
           <div style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.025em', fontFamily: 'var(--font-heading)' }}>
-            <Link to="/dashboard" style={{ color: 'var(--text-primary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div onClick={() => navigate('/dashboard')} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') navigate('/dashboard'); }} style={{ color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
               <div style={{ width: '24px', height: '24px', backgroundColor: 'var(--accent-color)', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M4 6L11 12L4 18" stroke="#0f1115" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M13 18H20" stroke="#0f1115" strokeWidth="2.8" strokeLinecap="round" /></svg></div>
               <span className="hide-on-mobile">InitPhase</span>
-            </Link>
+            </div>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -264,15 +285,26 @@ export default function ProjectWorkspace() {
             Workspace Modules
           </div>
           
-          <NavLink to="overview" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><LayoutDashboard size={20} className="module-icon" /> Dashboard <CompletionBadge complete /></NavLink>
-          <NavLink to="idea-brd" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><Sparkles size={20} className="module-icon" /> Idea to BRD <CompletionBadge complete={brds.length > 0} /></NavLink>
-          <NavLink to="requirements" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><ListTodo size={20} className="module-icon" /> Requirements <CompletionBadge complete={requirements.length > 0} /></NavLink>
-          <NavLink to="sequence" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><GitMerge size={20} className="module-icon" /> Sequence Flow <CompletionBadge complete={sequenceFlows.length > 0} /></NavLink>
-          <NavLink to="testcases" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><FlaskConical size={20} className="module-icon" /> Test Execution <CompletionBadge complete={testCases.length > 0} /></NavLink>
-          <NavLink to="issues" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><Ticket size={20} className="module-icon" /> Issues <CompletionBadge complete={openIssues === 0 && criticalIssues === 0} /></NavLink>
-          <NavLink to="rtm" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><Network size={20} className="module-icon" /> Analytics Matrix <CompletionBadge complete={coveragePct === 100 && requirements.length > 0} /></NavLink>
-          <NavLink to="change-impact" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><SearchCode size={20} className="module-icon" /> Change Impact</NavLink>
-          <NavLink to="documentation" className={({ isActive }) => `nav-link-item ${isActive ? 'active' : ''}`} style={navLinkStyle}><FileText size={20} className="module-icon" /> Documentation <CompletionBadge complete={requirements.length > 0 && coveragePct === 100} /></NavLink>
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = item.key === 'overview'
+              ? location.pathname.endsWith('/overview') || location.pathname.endsWith(`/${id}`) || location.pathname.endsWith(`/${id}/`)
+              : location.pathname.includes(`/${item.key}`);
+
+            return (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => navigate(item.key)}
+                className={`nav-link-item ${isActive ? 'active' : ''}`}
+                style={navLinkStyle(isActive)}
+              >
+                <Icon size={20} className="module-icon" />
+                <span>{item.label}</span>
+                {item.badge}
+              </button>
+            );
+          })}
         </aside>
 
         {/* Main Content Area */}
