@@ -56,6 +56,8 @@ initphase/
 │   │   │   ├── IssuesModule.jsx
 │   │   │   ├── DocumentationModule.jsx
 │   │   │   └── TestCasesModule.jsx
+│   │   ├── utils/
+│   │   │   ├── warmupBackend.js
 │   │   ├── App.jsx             # Main router configuration
 │   │   ├── main.jsx            # React root injection point
 │   │   ├── App.css
