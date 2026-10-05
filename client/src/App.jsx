@@ -6,7 +6,6 @@ import { ToastProvider } from './components/ToastProvider';
 
 import Login from './pages/Login';
 import Register from './pages/Register';
-import registerBg from './assets/register-bg-2.jpg';
 import { warmupBackend } from './utils/warmupBackend';
 import './App.css';
 
@@ -45,15 +44,6 @@ function ScrollToTop() {
   return null;
 }
 
-// Preloader for heavy assets to ensure they are ready when navigating
-function ImagePreloader() {
-  useEffect(() => {
-    const img = new Image();
-    img.src = registerBg;
-  }, []);
-  return null;
-}
-
 // Wake up Render backend as early as possible when any part of frontend loads
 function BackendWarmup() {
   useEffect(() => {
@@ -69,7 +59,6 @@ function App() {
         <BrowserRouter>
           <BackendWarmup />
           <ScrollToTop />
-          <ImagePreloader />
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />

@@ -1,6 +1,6 @@
 export default function StatCard({ title, value, color = 'var(--accent-color)', icon: Icon }) {
   return (
-    <div style={{ 
+    <div className="app-stat-card" style={{
       position: 'relative',
       padding: '20px', 
       backgroundColor: 'var(--bg-card)', 
@@ -25,11 +25,11 @@ export default function StatCard({ title, value, color = 'var(--accent-color)', 
         e.currentTarget.style.borderColor = 'var(--border-color)';
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'flex-start', gap: '12px', marginBottom: '20px' }}>
-        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase', lineHeight: '1.4', overflowWrap: 'break-word', wordBreak: 'break-word', flex: 1 }}>
+        <div className="app-stat-title" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase', lineHeight: '1.4', overflowWrap: 'break-word', wordBreak: 'break-word', flex: 1 }}>
           {title}
         </div>
         {Icon && (
-          <div style={{ 
+          <div className="app-stat-icon" style={{
             flexShrink: 0,
             padding: '10px', 
             backgroundColor: `color-mix(in srgb, ${color} 10%, transparent)`, 
@@ -45,7 +45,7 @@ export default function StatCard({ title, value, color = 'var(--accent-color)', 
         )}
       </div>
       <div>
-        <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--text-primary)', lineHeight: 1, fontFamily: 'var(--font-heading)' }}>
+        <div className="app-stat-value" style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--text-primary)', lineHeight: 1, fontFamily: 'var(--font-heading)' }}>
           {value}
         </div>
       </div>

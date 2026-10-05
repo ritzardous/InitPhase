@@ -5,9 +5,10 @@ export default function ModuleLayout({ title, description, connectionText, stats
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', flex: 1, minHeight: '100vh', padding: '0 0 40px 0', backgroundColor: 'var(--bg-base)', position: 'relative' }}>
+    <div className="app-module" style={{ display: 'flex', flexDirection: 'column', gap: '24px', flex: 1, padding: '0 0 40px 0', backgroundColor: 'var(--bg-base)', position: 'relative' }}>
       {/* Subtle Dashed Grid Background */}
       <div
+        className="app-module-grid"
         style={{
           position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
           backgroundImage: `
@@ -37,7 +38,8 @@ export default function ModuleLayout({ title, description, connectionText, stats
         boxShadow: 'var(--shadow-sm)',
         position: 'relative', zIndex: 1
       }}>
-        <h1 style={{ margin: '0 0 12px 0', fontSize: '2.5rem', color: 'var(--text-primary)', fontWeight: '800', fontFamily: 'var(--font-heading)' }}>
+        <span className="app-eyebrow">{flowStep ? `PHASE ${String(flowStep).padStart(2, '0')} / ` : ''}YOUR CONNECTED WORKSPACE</span>
+        <h1 className="app-page-title" style={{ margin: '0 0 12px 0', color: 'var(--text-primary)' }}>
           {title}
         </h1>
         <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)', maxWidth: '900px', lineHeight: '1.6' }}>
@@ -57,6 +59,7 @@ export default function ModuleLayout({ title, description, connectionText, stats
         {connectionText && (
           <div style={{ marginTop: '24px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
             <button 
+              aria-expanded={isOpen}
               onClick={() => setIsOpen(!isOpen)}
               style={{
                 width: '100%',

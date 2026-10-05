@@ -4,7 +4,8 @@ import StatCard from '../components/StatCard';
 import SectionCard from '../components/SectionCard';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/Button';
-import { Target, Server, Shield, Box, PlusCircle, Edit3, Trash2, Save, X } from 'lucide-react';
+import BrandLogo from '../components/BrandLogo';
+import { Target, Server, Shield, Box, PlusCircle, Edit3, Trash2, Save, X, ArrowUpRight } from 'lucide-react';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -111,9 +112,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: 'var(--bg-base)', position: 'relative' }}>
+    <div className="dashboard-shell" style={{ display: 'flex', flexDirection: 'column', minHeight: '100svh', backgroundColor: 'var(--bg-base)', position: 'relative' }}>
       {/* Dashed Grid */}
       <div
+        className="app-grid-backdrop"
         style={{
           position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
           backgroundImage: `
@@ -135,7 +137,7 @@ export default function Dashboard() {
         }}
       />
 
-      <nav className="responsive-nav" style={{ 
+      <nav className="responsive-nav app-nav" style={{
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
@@ -147,21 +149,19 @@ export default function Dashboard() {
         zIndex: 10,
         position: 'relative'
       }}>
-        <div style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.025em', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: '24px', height: '24px', backgroundColor: 'var(--accent-color)', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M4 6L11 12L4 18" stroke="#0f1115" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M13 18H20" stroke="#0f1115" strokeWidth="2.8" strokeLinecap="round" /></svg></div>
-          <span className="hide-on-mobile">InitPhase</span>
-        </div>
+        <BrandLogo />
         <div>
-          <Button variant="danger" size="sm" onClick={handleLogout}>
+          <Button variant="ghost" size="sm" onClick={handleLogout}>
             Log Out
           </Button>
         </div>
       </nav>
 
-      <div className="animate-fade-in module-padding" style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box', position: 'relative', zIndex: 1 }}>
+      <div className="animate-fade-in module-padding dashboard-content" style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box', position: 'relative', zIndex: 1 }}>
         <div className="dashboard-header-flex" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px' }}>
           <div>
-            <h1 style={{ margin: '0 0 12px 0', fontSize: '2.5rem', color: 'var(--text-primary)', fontWeight: '800', letterSpacing: '-0.025em', fontFamily: 'var(--font-heading)' }}>Your Projects</h1>
+            <span className="app-eyebrow"><span className="brand-live-dot" /> YOUR NEXT GREAT BUILD</span>
+            <h1 className="app-page-title" style={{ margin: '0 0 12px 0', color: 'var(--text-primary)' }}>Your Projects</h1>
             <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)', maxWidth: '800px', lineHeight: '1.6' }}>
               Select a project to manage its requirements, test cases, and traceability matrix.
             </p>
@@ -177,7 +177,7 @@ export default function Dashboard() {
         <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', marginBottom: '40px' }}>
           <StatCard title="Total Projects" value={projects.length} color="var(--accent-color)" icon={Target} />
           <StatCard title="Status" value="Online" color="var(--success)" icon={Server} />
-          <StatCard title="Plan" value="Free" color="#a855f7" icon={Shield} />
+          <StatCard title="Plan" value="Free" color="var(--accent-color)" icon={Shield} />
         </div>
 
         {showForm && (
@@ -220,7 +220,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
+        <div className="project-card-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
           {projects.length === 0 && !showForm ? (
             <div style={{ gridColumn: '1 / -1' }}>
               <EmptyState 
@@ -233,7 +233,7 @@ export default function Dashboard() {
               const isEditing = editingProjectId === project._id;
               
               return (
-                <div key={project._id} style={{ 
+                <div className="app-project-card" key={project._id} style={{
                   backgroundColor: 'var(--bg-card)', 
                   border: isEditing ? '1px solid var(--accent-color)' : '1px solid var(--border-color)', 
                   borderRadius: 'var(--radius-md)', 
@@ -291,9 +291,9 @@ export default function Dashboard() {
                           <div style={{ padding: '8px', backgroundColor: 'var(--bg-surface)', borderRadius: 'var(--radius-sm)', color: 'var(--accent-color)' }}>
                             <Box size={24} />
                           </div>
-                          <h3 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-primary)', fontWeight: '700', fontFamily: 'var(--font-heading)', lineHeight: 1.2, wordBreak: 'break-word' }}>{project.name}</h3>
+                          <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-primary)', fontWeight: '500', fontFamily: 'var(--font-heading)', lineHeight: 1.3, wordBreak: 'break-word' }}>{project.name}</h3>
                         </div>
-                        <p style={{ margin: '0 0 24px 0', color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '1rem', paddingLeft: '44px' }}>
+                        <p style={{ margin: '0 0 24px 0', color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '0.8rem' }}>
                           {project.description || 'No description provided.'}
                         </p>
                       </>
@@ -301,25 +301,8 @@ export default function Dashboard() {
                   </div>
                   
                   {!isEditing && (
-                    <Link to={`/projects/${project._id}/requirements`} style={{ textDecoration: 'none' }}>
-                      <button style={{ 
-                        width: '100%', 
-                        padding: '12px', 
-                        backgroundColor: 'var(--bg-surface)', 
-                        color: 'var(--accent-color)', 
-                        border: '1px solid var(--border-color)', 
-                        borderRadius: 'var(--radius-sm)',
-                        fontSize: '1rem',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        fontFamily: 'var(--font-heading)'
-                      }}
-                      onMouseOver={e => { e.currentTarget.style.backgroundColor = 'var(--accent-muted)'; e.currentTarget.style.borderColor = 'var(--accent-hover)'; }}
-                      onMouseOut={e => { e.currentTarget.style.backgroundColor = 'var(--bg-surface)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
-                      >
-                        Open Project &rarr;
-                      </button>
+                    <Link className="app-button app-button--secondary app-button--md app-project-open" to={`/projects/${project._id}/requirements`}>
+                      Open Project <ArrowUpRight size={15} />
                     </Link>
                   )}
                 </div>

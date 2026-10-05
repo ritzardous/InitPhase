@@ -68,7 +68,7 @@ const VisualDiagram = ({ steps }) => {
   
   if (actors.length === 0) {
     return (
-      <div style={{ padding: '20px', backgroundColor: '#1E1E1E', borderRadius: 'var(--radius-md)', color: '#D4D4D4', fontFamily: 'monospace' }}>
+      <div style={{ padding: '20px', backgroundColor: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
         {steps.map((s, i) => <div key={i}>{s}</div>)}
       </div>
     );
@@ -82,9 +82,9 @@ const VisualDiagram = ({ steps }) => {
       width: '100%',
       overflow: 'hidden', 
       padding: '40px 0', 
-      backgroundColor: '#1E1E1E', 
+      backgroundColor: 'var(--bg-surface)',
       borderRadius: 'var(--radius-md)',
-      border: '1px solid #333',
+      border: '1px solid var(--border-color)',
       boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)'
     }}>
       <div style={{ position: 'relative', width: '100%', height: diagramHeight * scale }}>
@@ -154,7 +154,7 @@ const VisualDiagram = ({ steps }) => {
             const width = rightPos - leftPos;
             const isRightDirection = receiverIdx > senderIdx;
 
-            const lineColor = step.isDashed ? '#D4D4D4' : '#569CD6';
+            const lineColor = step.isDashed ? 'var(--text-secondary)' : 'var(--accent-color)';
 
             return (
               <div key={`step-${idx}`} style={{ position: 'relative', height: '60px', zIndex: 5 }}>

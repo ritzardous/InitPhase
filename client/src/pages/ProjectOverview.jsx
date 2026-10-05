@@ -14,7 +14,7 @@ const COLORS = {
   'Fail': '#ef4444',
   'Pending': '#69717a',
   'Open': '#ef4444',
-  'In Progress': '#38bdf8',
+  'In Progress': '#b39aff',
   'Resolved': '#10b981',
   'Closed': '#10b981'
 };
@@ -57,9 +57,10 @@ export default function ProjectOverview() {
             : { title: 'Ready for documentation', message: 'Coverage is complete and no critical blockers are open. Hand-off packet assembled.', label: 'Prepare Docs', route: '../documentation', icon: FileText };
 
   return (
-    <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px' }} className="animate-fade-in module-container">
+    <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px' }} className="animate-fade-in module-container app-project-overview">
       <div style={{ marginBottom: '16px' }}>
-        <h1 style={{ fontSize: '2.5rem', color: 'var(--text-primary)', marginBottom: '8px', fontWeight: '800', fontFamily: 'var(--font-heading)' }}>
+        <span className="app-eyebrow">THE PLAN. THE PROGRESS. THE PROOF.</span>
+        <h1 className="app-page-title" style={{ color: 'var(--text-primary)', marginTop: '15px', marginBottom: '12px' }}>
           Project Dashboard
         </h1>
         <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', lineHeight: '1.6', maxWidth: '800px' }}>
@@ -69,8 +70,8 @@ export default function ProjectOverview() {
 
       <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
         <StatCard title="Total Requirements" value={requirements.length} icon={ListTodo} color="var(--accent-color)" />
-        <StatCard title="Sequence Flows" value={(sequenceFlows || []).length} icon={GitMerge} color="#3b82f6" />
-        <StatCard title="Total Test Cases" value={testCases.length} icon={FlaskConical} color="#a855f7" />
+        <StatCard title="Sequence Flows" value={(sequenceFlows || []).length} icon={GitMerge} color="var(--accent-color)" />
+        <StatCard title="Total Test Cases" value={testCases.length} icon={FlaskConical} color="var(--accent-color)" />
         <StatCard title="Open Issues" value={openIssuesCount} icon={Ticket} color={openIssuesCount > 0 ? "var(--danger)" : "var(--success)"} />
         <StatCard title="Requirement Coverage" value={`${coveragePct}%`} icon={Network} color={coveragePct === 100 ? '#10b981' : coveragePct === 0 ? '#ef4444' : '#f59e0b'} />
       </div>
@@ -94,7 +95,7 @@ export default function ProjectOverview() {
         icon={nextAction.icon}
       />
 
-      <div className="stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
+      <div className="stat-grid app-chart-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px' }}>
         <SectionCard title="Requirements Distribution">
           <div style={{ width: '100%', height: '250px' }}>
             {reqData.length > 0 ? (
@@ -174,7 +175,7 @@ export default function ProjectOverview() {
           
           <div style={{ padding: '24px', backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <GitMerge size={20} color="#3b82f6" /> Flows
+              <GitMerge size={20} color="var(--accent-color)" /> Flows
             </h3>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '16px', fontSize: '0.90rem', flex: 1 }}>Design systemic behavioral flows.</p>
             <Button variant="secondary" onClick={() => navigate('../sequence')}>Open Module</Button>
@@ -190,7 +191,7 @@ export default function ProjectOverview() {
           
           <div style={{ padding: '24px', backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FlaskConical size={20} color="#a855f7" /> Test Cases
+              <FlaskConical size={20} color="var(--accent-color)" /> Test Cases
             </h3>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '16px', fontSize: '0.90rem', flex: 1 }}>Write and execute tests against requirements.</p>
             <Button variant="secondary" onClick={() => navigate('../testcases')}>Open Module</Button>

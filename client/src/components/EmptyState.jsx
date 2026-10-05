@@ -17,7 +17,7 @@ export default function EmptyState({ title, message, iconName, actionLabel, acti
   };
 
   return (
-    <div style={{ 
+    <div className="app-empty-state" style={{
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 

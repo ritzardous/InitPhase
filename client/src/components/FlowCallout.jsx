@@ -20,7 +20,8 @@ export default function FlowCallout({
   const ToneIcon = Icon || (tone === 'success' ? CheckCircle2 : Info);
 
   return (
-    <div className="mobile-flex-col" style={{
+    <div className="app-flow-callout mobile-flex-col" style={{
+      '--callout-color': toneColor,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',

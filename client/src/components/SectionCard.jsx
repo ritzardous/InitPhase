@@ -1,6 +1,6 @@
 export default function SectionCard({ title, children, actions }) {
   return (
-    <div style={{ 
+    <div className="app-section-card" style={{
       backgroundColor: 'var(--bg-card)', 
       border: '1px solid var(--border-color)', 
       borderRadius: 'var(--radius-md)', 

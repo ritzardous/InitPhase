@@ -1,7 +1,7 @@
 export default function DataTable({ columns, data, renderRow, emptyMessage }) {
   return (
     <div className="table-responsive-wrapper" style={{ overflowX: 'auto', margin: '-24px', borderRadius: '0 0 var(--radius-md) var(--radius-md)' }}>
-      <table style={{ 
+      <table className="app-data-table" style={{
         width: '100%', 
         borderCollapse: 'collapse', 
         textAlign: 'left', 

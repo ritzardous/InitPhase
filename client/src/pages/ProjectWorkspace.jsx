@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { CheckCircle2, Circle, FileText, FlaskConical, GitMerge, LayoutDashboard, ListTodo, LogOut, Menu, Network, SearchCode, Sparkles, Ticket, X } from 'lucide-react';
 import Button from '../components/Button';
 import LoadingState from '../components/LoadingState';
+import BrandLogo from '../components/BrandLogo';
 
 function CompletionBadge({ complete }) {
   return (
@@ -18,7 +19,26 @@ export default function ProjectWorkspace() {
   const [project, setProject] = useState(null);
   const [error, setError] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCompact, setIsCompact] = useState(() => window.matchMedia('(max-width: 768px)').matches);
+  const menuButtonRef = useRef(null);
   const location = useLocation();
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)');
+    const updateViewport = (event) => setIsCompact(event.matches);
+    const closeWithEscape = (event) => {
+      if (event.key === 'Escape' && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    media.addEventListener('change', updateViewport);
+    document.addEventListener('keydown', closeWithEscape);
+    return () => {
+      media.removeEventListener('change', updateViewport);
+      document.removeEventListener('keydown', closeWithEscape);
+    };
+  }, [isMobileMenuOpen]);
 
   // Close mobile menu and scroll content to top on route change
   useEffect(() => {
@@ -227,8 +247,8 @@ export default function ProjectWorkspace() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', backgroundColor: 'var(--bg-base)' }}>
-      <nav className="responsive-nav" style={{ 
+    <div className="workspace-shell" style={{ display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden', backgroundColor: 'var(--bg-base)' }}>
+      <nav className="responsive-nav app-nav" style={{
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
@@ -240,15 +260,10 @@ export default function ProjectWorkspace() {
         zIndex: 10
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button className="hamburger-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button ref={menuButtonRef} className="hamburger-btn" aria-label={isMobileMenuOpen ? 'Close workspace navigation' : 'Open workspace navigation'} aria-expanded={isMobileMenuOpen} aria-controls="workspace-navigation" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <div style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.025em', fontFamily: 'var(--font-heading)' }}>
-            <div onClick={() => navigate('/dashboard')} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') navigate('/dashboard'); }} style={{ color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
-              <div style={{ width: '24px', height: '24px', backgroundColor: 'var(--accent-color)', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M4 6L11 12L4 18" stroke="#0f1115" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" /><path d="M13 18H20" stroke="#0f1115" strokeWidth="2.8" strokeLinecap="round" /></svg></div>
-              <span className="hide-on-mobile">InitPhase</span>
-            </div>
-          </div>
+          <BrandLogo to="/dashboard" />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div className="hide-on-mobile" style={{ fontWeight: '700', color: criticalIssues > 0 ? 'var(--danger)' : coveragePct === 100 && requirements.length > 0 ? 'var(--success)' : 'var(--warning)', fontSize: '0.95rem', padding: '6px 16px', backgroundColor: 'var(--bg-card)', borderRadius: '9999px', border: '1px solid var(--border-color)' }}>
@@ -267,7 +282,7 @@ export default function ProjectWorkspace() {
         )}
 
         {/* Left vertical sidebar */}
-        <aside className={`workspace-sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{ 
+        <aside id="workspace-navigation" aria-label="Workspace navigation" inert={isCompact && !isMobileMenuOpen ? true : undefined} className={`workspace-sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`} style={{
           width: '280px', 
           backgroundColor: 'var(--bg-surface)', 
           borderRight: '1px solid var(--border-color)',
@@ -296,6 +311,7 @@ export default function ProjectWorkspace() {
                 key={item.key}
                 type="button"
                 onClick={() => navigate(item.key)}
+                aria-current={isActive ? 'page' : undefined}
                 className={`nav-link-item ${isActive ? 'active' : ''}`}
                 style={navLinkStyle(isActive)}
               >
@@ -308,7 +324,7 @@ export default function ProjectWorkspace() {
         </aside>
 
         {/* Main Content Area */}
-        <main style={{ flex: 1, overflowY: 'auto', backgroundColor: 'var(--bg-base)' }}>
+        <main className="workspace-main" inert={isCompact && isMobileMenuOpen ? true : undefined} style={{ flex: 1, overflowY: 'auto', backgroundColor: 'var(--bg-base)' }}>
           <div className="workspace-flow-strip" style={{ padding: '14px 24px', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-surface)', display: 'flex', alignItems: 'center', gap: '16px', overflowX: 'auto' }}>
             <div style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
               Flow {completedSteps}/{lifecycleSteps.length}

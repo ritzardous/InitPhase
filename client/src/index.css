@@ -1,36 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Default light theme (for Landing etc) if not in .enterprise-app */
-  --bg-color: #f5f5f5;
-  --text-color: #333;
+  color-scheme: dark;
+  --bg-color: #0b0b10;
+  --text-color: #f0eff5;
 }
 
 .enterprise-app {
-  /* Global Dark Theme Tokens */
-  --bg-base: #0f1115;
-  /* Deepest dark */
-  --bg-surface: #181b21;
-  /* Main content area */
-  --bg-card: #22262f;
-  /* Cards and elevated elements */
-  --bg-card-hover: #2a2e38;
+  /* Shared InitPhase palette: landing, authentication, and workspace. */
+  --bg-base: #0b0b10;
+  --bg-surface: #100e16;
+  --bg-card: #15111d;
+  --bg-card-hover: #21182e;
 
-  --border-color: #313642;
-  /* Soft borders */
-  --border-strong: #454b59;
+  --border-color: rgba(195, 184, 227, 0.13);
+  --border-strong: #4c3c62;
 
-  --text-primary: #f8fafc;
-  /* Crisp white */
-  --text-secondary: #a1a1aa;
-  /* Muted gray */
-  --text-tertiary: #71717a;
-  /* Deeper muted */
+  --text-primary: #f0eff5;
+  --text-secondary: #a6a0b4;
+  --text-tertiary: #8a7e9b;
 
-  --accent-color: #e4e4e7;
-  /* Clean monochrome white */
-  --accent-hover: #ffffff;
-  --accent-muted: rgba(255, 255, 255, 0.08);
+  --accent-color: #c0a6ff;
+  --accent-hover: #d1beff;
+  --accent-muted: rgba(179, 154, 255, 0.1);
+  --accent-ink: #191222;
 
   --success: #10b981;
   --success-bg: rgba(16, 185, 129, 0.1);
@@ -45,11 +38,11 @@
 
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-lg: 12px;
 
   /* Fonts */
   --font-body: 'Inter', sans-serif;
-  --font-heading: 'Outfit', sans-serif;
+  --font-heading: 'Inter', sans-serif;
 }
 
 * {
@@ -72,7 +65,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 a {
@@ -129,7 +122,7 @@ textarea {
 
   /* Prevent horizontal overflow globally and scale base unit */
   html {
-    font-size: 13px !important;
+    font-size: 16px;
   }
 
   body,
