@@ -1,128 +1,77 @@
-import { useState } from 'react';
-import { Info, ChevronDown, ChevronUp } from 'lucide-react';
-
-export default function ModuleLayout({ title, description, connectionText, stats, children, flowStep, dependsOn, feedsInto, statusBadge }) {
+import { useId, useState } from "react";
+import { Info, ChevronDown, ArrowRight } from "lucide-react";
+export default function ModuleLayout({
+  title,
+  description,
+  connectionText,
+  stats,
+  children,
+  flowStep,
+  dependsOn,
+  feedsInto,
+  statusBadge,
+}) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const helpId = useId();
   return (
-    <div className="app-module" style={{ display: 'flex', flexDirection: 'column', gap: '24px', flex: 1, padding: '0 0 40px 0', backgroundColor: 'var(--bg-base)', position: 'relative' }}>
-      {/* Subtle Dashed Grid Background */}
-      <div
-        className="app-module-grid"
-        style={{
-          position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-          backgroundImage: `
-            linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
-          `,
-          backgroundSize: "20px 20px",
-          backgroundPosition: "0 0, 0 0",
-          maskImage: `
-            repeating-linear-gradient(to right, black 0px, black 3px, transparent 3px, transparent 8px),
-            repeating-linear-gradient(to bottom, black 0px, black 3px, transparent 3px, transparent 8px)
-          `,
-          WebkitMaskImage: `
-            repeating-linear-gradient(to right, black 0px, black 3px, transparent 3px, transparent 8px),
-            repeating-linear-gradient(to bottom, black 0px, black 3px, transparent 3px, transparent 8px)
-          `,
-          maskComposite: "intersect",
-          WebkitMaskComposite: "source-in",
-        }}
-      />
-
-      {/* Heavy Enterprise Dark Header Component */}
-      <div className="module-header-padding" style={{ 
-        padding: '32px 40px', 
-        backgroundColor: 'var(--bg-surface)', 
-        borderBottom: '1px solid var(--border-color)', 
-        boxShadow: 'var(--shadow-sm)',
-        position: 'relative', zIndex: 1
-      }}>
-        <span className="app-eyebrow">{flowStep ? `PHASE ${String(flowStep).padStart(2, '0')} / ` : ''}YOUR CONNECTED WORKSPACE</span>
-        <h1 className="app-page-title" style={{ margin: '0 0 12px 0', color: 'var(--text-primary)' }}>
-          {title}
-        </h1>
-        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)', maxWidth: '900px', lineHeight: '1.6' }}>
-          {description}
-        </p>
-
-        {(flowStep || dependsOn || feedsInto || statusBadge) && (
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '18px' }}>
-            {flowStep && <span style={pillStyle}>Step {flowStep}</span>}
-            {dependsOn && <span style={pillStyle}>Uses {dependsOn}</span>}
-            {feedsInto && <span style={pillStyle}>Feeds {feedsInto}</span>}
-            {statusBadge && <span style={{ ...pillStyle, color: 'var(--success)', borderColor: 'rgba(16, 185, 129, 0.45)', backgroundColor: 'var(--success-bg)' }}>{statusBadge}</span>}
+    <div className="app-module saas-module">
+      <header className="module-header-padding saas-module-header">
+        <div className="saas-module-title-row">
+          <div>
+            <span className="saas-overline">
+              {flowStep
+                ? `WORKFLOW / STEP ${flowStep}`
+                : "YOUR CONNECTED WORKSPACE"}
+            </span>
+            <h1 className="app-page-title">{title}</h1>
           </div>
-        )}
-
-        {/* Collapsible Overview Panel */}
-        {connectionText && (
-          <div style={{ marginTop: '24px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
-            <button 
+          {connectionText && (
+            <button
+              className="saas-help-button"
               aria-expanded={isOpen}
+              aria-controls={helpId}
               onClick={() => setIsOpen(!isOpen)}
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '16px 24px',
-                backgroundColor: isOpen ? 'var(--bg-card-hover)' : 'transparent',
-                border: 'none',
-                color: 'var(--text-primary)',
-                fontSize: '1rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-                outline: 'none'
-              }}
-              onMouseOver={e => !isOpen && (e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)')}
-              onMouseOut={e => !isOpen && (e.currentTarget.style.backgroundColor = 'transparent')}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Info size={18} color="var(--accent-color)" />
-                How does this module work?
-              </div>
-              {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              <Info size={15} />
+              <span>Module guide</span>
+              <ChevronDown size={14} className={isOpen ? "is-open" : ""} />
             </button>
-            
-            {isOpen && (
-              <div className="animate-fade-in" style={{ padding: '24px', borderTop: '1px solid var(--border-color)', color: 'var(--text-secondary)', lineHeight: '1.8', whiteSpace: 'pre-line' }}>
-                {connectionText}
-              </div>
+          )}
+        </div>
+        <p className="saas-module-description">{description}</p>
+        {(dependsOn || feedsInto || statusBadge) && (
+          <div className="saas-module-meta">
+            {dependsOn && (
+              <span>
+                From <strong>{dependsOn}</strong>
+              </span>
+            )}
+            {feedsInto && (
+              <>
+                <ArrowRight size={12} />
+                <span>
+                  To <strong>{feedsInto}</strong>
+                </span>
+              </>
+            )}
+            {statusBadge && (
+              <span className="saas-module-status">
+                <i />
+                {statusBadge}
+              </span>
             )}
           </div>
         )}
-        
-        {stats && (
-          <div className="stat-grid" style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-            gap: '24px', 
-            marginTop: '32px' 
-          }}>
-            {stats}
+        {connectionText && (
+          <div id={helpId} className="saas-module-help" hidden={!isOpen}>
+            {connectionText}
           </div>
         )}
-      </div>
-
-      <div className="module-padding" style={{ padding: '0 40px', display: 'flex', flexDirection: 'column', gap: '32px', position: 'relative', zIndex: 1 }}>
+      </header>
+      <div className="module-padding saas-module-body">
+        {stats && <div className="stat-grid saas-metric-grid">{stats}</div>}
         {children}
       </div>
     </div>
   );
 }
-
-const pillStyle = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  padding: '6px 10px',
-  borderRadius: '999px',
-  border: '1px solid var(--border-color)',
-  backgroundColor: 'var(--bg-card)',
-  color: 'var(--text-secondary)',
-  fontSize: '0.78rem',
-  fontWeight: 800,
-  textTransform: 'uppercase',
-  letterSpacing: '0.04em',
-};

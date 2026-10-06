@@ -1,91 +1,135 @@
-import { useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import ModuleLayout from '../components/ModuleLayout';
-import StatCard from '../components/StatCard';
-import SectionCard from '../components/SectionCard';
-import EmptyState from '../components/EmptyState';
-import Button from '../components/Button';
-import FlowCallout from '../components/FlowCallout';
-import { useToast } from '../components/useToast';
-import { ArrowRight, Layers, ListTodo, AlertCircle, CheckCircle, Plus, Trash2 } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import ModuleLayout from "../components/ModuleLayout";
+import StatCard from "../components/StatCard";
+import SectionCard from "../components/SectionCard";
+import EmptyState from "../components/EmptyState";
+import Button from "../components/Button";
+import FlowCallout from "../components/FlowCallout";
+import { useToast } from "../components/useToast";
+import {
+  ArrowRight,
+  Layers,
+  ListTodo,
+  AlertCircle,
+  CheckCircle,
+  Plus,
+  Trash2,
+} from "lucide-react";
 
 export default function RequirementsModule() {
-  const { projectId, requirements, testCases, fetchRequirements, fetchRtm } = useOutletContext();
+  const { projectId, requirements, testCases, fetchRequirements, fetchRtm } =
+    useOutletContext();
   const navigate = useNavigate();
   const toast = useToast();
-  const [reqTitle, setReqTitle] = useState('');
-  const [reqPriority, setReqPriority] = useState('Should-Have');
-  const [filterPriority, setFilterPriority] = useState('All');
+  const [reqTitle, setReqTitle] = useState("");
+  const [reqPriority, setReqPriority] = useState("Should-Have");
+  const [filterPriority, setFilterPriority] = useState("All");
 
   const handleAddRequirement = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/requirements/${projectId}`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/requirements/${projectId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ title: reqTitle, priority: reqPriority }),
         },
-        body: JSON.stringify({ title: reqTitle, priority: reqPriority })
-      });
+      );
       if (res.ok) {
-        setReqTitle('');
-        setReqPriority('Should-Have');
+        setReqTitle("");
+        setReqPriority("Should-Have");
         fetchRequirements(token);
         fetchRtm(token);
-        toast.success('Requirement added. Ready to attach a test when you are.');
+        toast.success(
+          "Requirement added. Ready to attach a test when you are.",
+        );
       }
     } catch (err) {
       console.error(err);
-      toast.error('Could not add the requirement.');
+      toast.error("Could not add the requirement.");
     }
   };
 
   const handleDeleteRequirement = async (reqId) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/requirements/${reqId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/requirements/${reqId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (res.ok) {
         fetchRequirements(token);
         fetchRtm(token);
-        toast.info('Requirement removed and coverage refreshed.');
+        toast.info("Requirement removed and coverage refreshed.");
       }
     } catch (err) {
       console.error(err);
-      toast.error('Could not delete the requirement.');
+      toast.error("Could not delete the requirement.");
     }
   };
 
   const totalReqs = requirements.length;
-  const mustHave = requirements.filter(r => r.priority === 'Must-Have').length;
-  const shouldHave = requirements.filter(r => r.priority === 'Should-Have').length;
-  const niceToHave = requirements.filter(r => r.priority === 'Nice-to-Have').length;
+  const mustHave = requirements.filter(
+    (r) => r.priority === "Must-Have",
+  ).length;
+  const shouldHave = requirements.filter(
+    (r) => r.priority === "Should-Have",
+  ).length;
+  const niceToHave = requirements.filter(
+    (r) => r.priority === "Nice-to-Have",
+  ).length;
 
-  const filteredRequirements = filterPriority === 'All' 
-    ? requirements 
-    : requirements.filter(r => r.priority === filterPriority);
-
-
+  const filteredRequirements =
+    filterPriority === "All"
+      ? requirements
+      : requirements.filter((r) => r.priority === filterPriority);
 
   return (
     <ModuleLayout
       title="Requirements"
       description="Define what your software needs to do before you start building. List every feature, rule, or behavior your system must support."
-      connectionText={"• Requirements are the foundation of your project - they describe WHAT your system should do.\n• Each requirement can be prioritized: Must-Have (essential), Should-Have (important), or Nice-to-Have (bonus).\n• Once you add requirements here, you can create test cases for them in the Test Cases module.\n• The Traceability Matrix will then show you which requirements have been tested and which haven't.\n• Think of requirements as a checklist of promises your software must keep."}
+      connectionText={
+        "• Requirements are the foundation of your project - they describe WHAT your system should do.\n• Each requirement can be prioritized: Must-Have (essential), Should-Have (important), or Nice-to-Have (bonus).\n• Once you add requirements here, you can create test cases for them in the Test Cases module.\n• The Traceability Matrix will then show you which requirements have been tested and which haven't.\n• Think of requirements as a checklist of promises your software must keep."
+      }
       flowStep="3 of 8"
       dependsOn="BRD or manual input"
       feedsInto="Test Cases and RTM"
       statusBadge={totalReqs > 0 ? `${totalReqs} captured` : null}
       stats={
         <>
-          <StatCard title="Total Needs" value={totalReqs} color="var(--accent-color)" icon={Layers} />
-          <StatCard title="Must-Have" value={mustHave} color="var(--danger)" icon={AlertCircle} />
-          <StatCard title="Should-Have" value={shouldHave} color="var(--warning)" icon={ListTodo} />
-          <StatCard title="Nice-to-Have" value={niceToHave} color="var(--success)" icon={CheckCircle} />
+          <StatCard
+            title="Total Needs"
+            value={totalReqs}
+            color="var(--accent-color)"
+            icon={Layers}
+          />
+          <StatCard
+            title="Must-Have"
+            value={mustHave}
+            color="var(--danger)"
+            icon={AlertCircle}
+          />
+          <StatCard
+            title="Should-Have"
+            value={shouldHave}
+            color="var(--warning)"
+            icon={ListTodo}
+          />
+          <StatCard
+            title="Nice-to-Have"
+            value={niceToHave}
+            color="var(--success)"
+            icon={CheckCircle}
+          />
         </>
       }
     >
@@ -95,47 +139,81 @@ export default function RequirementsModule() {
           title="Requirements are ready for verification"
           message="You have requirements but no test cases yet. Creating tests now will light up the Traceability Matrix."
           actionLabel="Create Test Cases"
-          onAction={() => navigate('../testcases')}
+          onAction={() => navigate("../testcases")}
         />
       )}
 
       <SectionCard title="Add a New Requirement">
-        <form onSubmit={handleAddRequirement} className="mobile-flex-col" style={{ display: 'flex', gap: '16px', alignItems: 'stretch', flexWrap: 'wrap' }}>
-          <input 
-            type="text" 
-            value={reqTitle} 
-            onChange={(e) => setReqTitle(e.target.value)} 
-            placeholder="e.g., User must be able to log in with email and password" 
-            required 
-            style={{ 
-              flex: 1, 
-              padding: '12px 16px', 
-              backgroundColor: 'var(--bg-base)',
-              border: '1px solid var(--border-color)', 
-              borderRadius: 'var(--radius-sm)',
-              color: 'var(--text-primary)',
-              fontSize: '1rem',
+        <form
+          onSubmit={handleAddRequirement}
+          className="mobile-flex-col"
+          style={{
+            display: "flex",
+            gap: "16px",
+            alignItems: "stretch",
+            flexWrap: "wrap",
+          }}
+        >
+          <input
+            aria-label="Requirement title"
+            type="text"
+            value={reqTitle}
+            onChange={(e) => setReqTitle(e.target.value)}
+            placeholder="e.g., User must be able to log in with email and password"
+            required
+            style={{
+              flex: 1,
+              padding: "12px 16px",
+              backgroundColor: "var(--bg-base)",
+              border: "1px solid var(--border-color)",
+              borderRadius: "var(--radius-sm)",
+              color: "var(--text-primary)",
+              fontSize: "1rem",
               margin: 0,
               minWidth: 0,
-              width: '100%'
+              width: "100%",
             }}
           />
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-            {['Must-Have', 'Should-Have', 'Nice-to-Have'].map(p => (
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            {["Must-Have", "Should-Have", "Nice-to-Have"].map((p) => (
               <button
                 type="button"
                 key={p}
                 onClick={() => setReqPriority(p)}
                 style={{
-                  padding: '10px 16px',
-                  borderRadius: '9999px',
-                  border: reqPriority === p ? `1px solid ${p === 'Must-Have' ? 'var(--danger)' : p === 'Should-Have' ? 'var(--warning)' : 'var(--success)'}` : '1px solid var(--border-color)',
-                  backgroundColor: reqPriority === p ? (p === 'Must-Have' ? 'var(--danger-bg)' : p === 'Should-Have' ? 'var(--warning-bg)' : 'var(--success-bg)') : 'var(--bg-base)',
-                  color: reqPriority === p ? (p === 'Must-Have' ? 'var(--danger)' : p === 'Should-Have' ? 'var(--warning)' : 'var(--success)') : 'var(--text-secondary)',
-                  cursor: 'pointer',
-                  fontWeight: reqPriority === p ? '700' : '500',
-                  transition: 'all 0.2s',
-                  fontSize: '0.9rem'
+                  padding: "10px 16px",
+                  borderRadius: "9999px",
+                  border:
+                    reqPriority === p
+                      ? `1px solid ${p === "Must-Have" ? "var(--danger)" : p === "Should-Have" ? "var(--warning)" : "var(--success)"}`
+                      : "1px solid var(--border-color)",
+                  backgroundColor:
+                    reqPriority === p
+                      ? p === "Must-Have"
+                        ? "var(--danger-bg)"
+                        : p === "Should-Have"
+                          ? "var(--warning-bg)"
+                          : "var(--success-bg)"
+                      : "var(--bg-base)",
+                  color:
+                    reqPriority === p
+                      ? p === "Must-Have"
+                        ? "var(--danger)"
+                        : p === "Should-Have"
+                          ? "var(--warning)"
+                          : "var(--success)"
+                      : "var(--text-secondary)",
+                  cursor: "pointer",
+                  fontWeight: reqPriority === p ? "700" : "500",
+                  transition: "all 0.2s",
+                  fontSize: "0.9rem",
                 }}
               >
                 {p}
@@ -148,21 +226,21 @@ export default function RequirementsModule() {
         </form>
       </SectionCard>
 
-      <SectionCard 
+      <SectionCard
         title="Your Requirements"
         actions={
-          <select 
-            value={filterPriority} 
+          <select
+            value={filterPriority}
             onChange={(e) => setFilterPriority(e.target.value)}
-            style={{ 
-              padding: '8px 12px', 
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border-color)', 
-              color: 'var(--text-secondary)',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '0.9rem',
-              cursor: 'pointer',
-              outline: 'none'
+            style={{
+              padding: "8px 12px",
+              backgroundColor: "var(--bg-card)",
+              border: "1px solid var(--border-color)",
+              color: "var(--text-secondary)",
+              borderRadius: "var(--radius-sm)",
+              fontSize: "0.9rem",
+              cursor: "pointer",
+              outline: "none",
             }}
           >
             <option value="All">Show All</option>
@@ -172,73 +250,135 @@ export default function RequirementsModule() {
           </select>
         }
       >
-
         {filteredRequirements.length === 0 ? (
-          <EmptyState 
-            title={requirements.length === 0 ? 'Start the requirement trail' : 'No matching requirements'}
-            message={requirements.length === 0 ? "No requirements added yet. Use the form above to add your first requirement." : "No requirements match the selected filter."} 
+          <EmptyState
+            title={
+              requirements.length === 0
+                ? "Start the requirement trail"
+                : "No matching requirements"
+            }
+            message={
+              requirements.length === 0
+                ? "No requirements added yet. Use the form above to add your first requirement."
+                : "No requirements match the selected filter."
+            }
             iconName="requirement"
-            actionLabel={requirements.length === 0 ? 'Use Idea to BRD' : undefined}
+            actionLabel={
+              requirements.length === 0 ? "Use Idea to BRD" : undefined
+            }
             actionIcon={ArrowRight}
-            onAction={requirements.length === 0 ? () => navigate('../idea-brd') : undefined}
+            onAction={
+              requirements.length === 0
+                ? () => navigate("../idea-brd")
+                : undefined
+            }
           />
         ) : (
-          <div className="mobile-card-grid" style={{ gap: '20px' }}>
-            {filteredRequirements.map(req => (
-              <div 
+          <div className="mobile-card-grid" style={{ gap: "20px" }}>
+            {filteredRequirements.map((req) => (
+              <div
                 key={req._id}
                 style={{
-                  backgroundColor: 'var(--bg-base)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '24px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  transition: 'all 0.2s',
-                  position: 'relative',
-                  overflow: 'hidden'
+                  backgroundColor: "var(--bg-base)",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "var(--radius-md)",
+                  padding: "24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  transition: "all 0.2s",
+                  position: "relative",
+                  overflow: "hidden",
                 }}
-                onMouseOver={e => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                  e.currentTarget.style.borderColor = req.priority === 'Must-Have' ? 'rgba(239, 68, 68, 0.5)' : req.priority === 'Should-Have' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(16, 185, 129, 0.5)';
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                  e.currentTarget.style.boxShadow = "var(--shadow-md)";
+                  e.currentTarget.style.borderColor =
+                    req.priority === "Must-Have"
+                      ? "rgba(239, 68, 68, 0.5)"
+                      : req.priority === "Should-Have"
+                        ? "rgba(245, 158, 11, 0.5)"
+                        : "rgba(16, 185, 129, 0.5)";
                 }}
-                onMouseOut={e => {
-                  e.currentTarget.style.transform = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.borderColor = 'var(--border-color)';
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "none";
+                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.borderColor = "var(--border-color)";
                 }}
               >
-
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                    <span style={{
-                      padding: '4px 10px',
-                      borderRadius: '9999px',
-                      fontSize: '0.75rem',
-                      fontWeight: '700',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                      backgroundColor: req.priority === 'Must-Have' ? 'var(--danger-bg)' : req.priority === 'Should-Have' ? 'var(--warning-bg)' : 'var(--success-bg)',
-                      color: req.priority === 'Must-Have' ? 'var(--danger)' : req.priority === 'Should-Have' ? 'var(--warning)' : 'var(--success)',
-                      border: `1px solid ${req.priority === 'Must-Have' ? 'rgba(239, 68, 68, 0.3)' : req.priority === 'Should-Have' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`
-                    }}>
-                      {req.priority === 'Must-Have' && <AlertCircle size={12} />}
-                      {req.priority === 'Should-Have' && <ListTodo size={12} />}
-                      {req.priority === 'Nice-to-Have' && <CheckCircle size={12} />}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        padding: "4px 10px",
+                        borderRadius: "9999px",
+                        fontSize: "0.75rem",
+                        fontWeight: "700",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        backgroundColor:
+                          req.priority === "Must-Have"
+                            ? "var(--danger-bg)"
+                            : req.priority === "Should-Have"
+                              ? "var(--warning-bg)"
+                              : "var(--success-bg)",
+                        color:
+                          req.priority === "Must-Have"
+                            ? "var(--danger)"
+                            : req.priority === "Should-Have"
+                              ? "var(--warning)"
+                              : "var(--success)",
+                        border: `1px solid ${req.priority === "Must-Have" ? "rgba(239, 68, 68, 0.3)" : req.priority === "Should-Have" ? "rgba(245, 158, 11, 0.3)" : "rgba(16, 185, 129, 0.3)"}`,
+                      }}
+                    >
+                      {req.priority === "Must-Have" && (
+                        <AlertCircle size={12} />
+                      )}
+                      {req.priority === "Should-Have" && <ListTodo size={12} />}
+                      {req.priority === "Nice-to-Have" && (
+                        <CheckCircle size={12} />
+                      )}
                       {req.priority}
                     </span>
                   </div>
-                  <h4 style={{ margin: '0 0 20px 0', fontSize: '1.1rem', color: 'var(--text-primary)', lineHeight: '1.5', wordBreak: 'break-word', fontWeight: '500' }}>
+                  <h4
+                    style={{
+                      margin: "0 0 20px 0",
+                      fontSize: "1.1rem",
+                      color: "var(--text-primary)",
+                      lineHeight: "1.5",
+                      wordBreak: "break-word",
+                      fontWeight: "500",
+                    }}
+                  >
                     {req.title}
                   </h4>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-                  <Button variant="danger" size="sm" onClick={() => handleDeleteRequirement(req._id)} style={{ padding: '6px 12px' }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    borderTop: "1px solid var(--border-color)",
+                    paddingTop: "16px",
+                  }}
+                >
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    aria-label={`Delete requirement ${req.title}`}
+                    onClick={() => handleDeleteRequirement(req._id)}
+                    style={{ padding: "6px 12px" }}
+                  >
                     <Trash2 size={16} />
                   </Button>
                 </div>

@@ -1,31 +1,26 @@
-export default function SectionCard({ title, children, actions }) {
+export default function SectionCard({
+  title,
+  children,
+  actions,
+  className = "",
+  description,
+  eyebrow,
+}) {
   return (
-    <div className="app-section-card" style={{
-      backgroundColor: 'var(--bg-card)', 
-      border: '1px solid var(--border-color)', 
-      borderRadius: 'var(--radius-md)', 
-      boxShadow: 'var(--shadow-lg)',
-      overflow: 'hidden',
-      marginBottom: '24px'
-    }}>
+    <section className={`app-section-card ${className}`}>
       {title && (
-        <div className="section-card-header" style={{ 
-          padding: '20px 24px', 
-          borderBottom: '1px solid var(--border-color)', 
-          backgroundColor: 'var(--bg-surface)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-primary)', fontWeight: '700', fontFamily: 'var(--font-heading)' }}>
-            {title}
-          </h2>
-          {actions && <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>{actions}</div>}
-        </div>
+        <header className="section-card-header">
+          <div>
+            {eyebrow && <span className="saas-section-eyebrow">{eyebrow}</span>}
+            <h2>{title}</h2>
+            {description && (
+              <p className="saas-section-description">{description}</p>
+            )}
+          </div>
+          {actions && <div className="saas-section-actions">{actions}</div>}
+        </header>
       )}
-      <div style={{ padding: '24px' }}>
-        {children}
-      </div>
-    </div>
+      <div className="saas-section-body">{children}</div>
+    </section>
   );
 }
