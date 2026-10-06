@@ -50,6 +50,17 @@ export default function Dashboard() {
   const [editingProjectId, setEditingProjectId] = useState(null);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
+  const logoutDialog = useRef(null);
+  const logoutCancel = useRef(null);
+  function requestLogout() {
+    logoutDialog.current?.showModal();
+    logoutCancel.current?.focus();
+  }
+  function confirmLogout() {
+    logoutDialog.current?.close();
+    localStorage.removeItem("token");
+    navigate("/login", { replace: true });
+  }
   const createButton = useRef(null);
   const creationPanel = useRef(null);
   const fetchProjects = useCallback(
@@ -234,18 +245,48 @@ export default function Dashboard() {
               <strong>Your workspace</strong>
               <small>Free plan · AI included</small>
             </div>
-            <button
-              aria-label="Log out"
-              onClick={() => {
-                localStorage.removeItem("token");
-                navigate("/login");
-              }}
-            >
+            <button aria-label="Log out" onClick={requestLogout}>
               <LogOut size={17} />
             </button>
           </div>
         </div>
       </aside>
+      <dialog
+        ref={logoutDialog}
+        className="saas-logout-dialog"
+        aria-labelledby="logout-dialog-title"
+        aria-describedby="logout-dialog-description"
+      >
+        <button
+          type="button"
+          className="saas-logout-close"
+          aria-label="Close logout confirmation"
+          onClick={() => logoutDialog.current?.close()}
+        >
+          <X size={18} />
+        </button>
+        <div className="saas-logout-symbol" aria-hidden="true">
+          <LogOut size={22} />
+        </div>
+        <span className="saas-section-eyebrow">YOUR WORKSPACE</span>
+        <h2 id="logout-dialog-title">Log out of InitPhase?</h2>
+        <p id="logout-dialog-description">
+          You’ll need to sign in again to access your projects.
+        </p>
+        <div className="saas-logout-actions">
+          <Button
+            type="button"
+            variant="secondary"
+            ref={logoutCancel}
+            onClick={() => logoutDialog.current?.close()}
+          >
+            Cancel
+          </Button>
+          <Button type="button" onClick={confirmLogout}>
+            Log out <ArrowRight size={15} />
+          </Button>
+        </div>
+      </dialog>
       <div className="saas-dashboard-main">
         <header className="saas-topbar">
           <div className="saas-desktop-breadcrumb">
@@ -265,10 +306,7 @@ export default function Dashboard() {
             <button
               className="saas-icon-button saas-mobile-logout"
               aria-label="Log out"
-              onClick={() => {
-                localStorage.removeItem("token");
-                navigate("/login");
-              }}
+              onClick={requestLogout}
             >
               <LogOut size={17} />
             </button>
@@ -368,7 +406,12 @@ export default function Dashboard() {
                   rows={2}
                 />
                 <div className="saas-form-actions">
-                  <Button type="button" variant="ghost" onClick={closeForm} disabled={busy}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={closeForm}
+                    disabled={busy}
+                  >
                     Cancel
                   </Button>
                   <Button type="submit" disabled={busy || !name.trim()}>

@@ -2324,3 +2324,95 @@
   background: #c9b3ff !important;
   transform: translateY(-1px);
 }
+/* Native modal provides focus containment, Escape dismissal and focus restoration. */
+.saas-ui .saas-logout-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(420px, calc(100vw - 40px));
+  max-height: calc(100dvh - 40px);
+  box-sizing: border-box;
+  overflow: auto;
+  padding: 32px;
+  background: #15111c;
+  color: #e9e0f2;
+  border: 1px solid #b89ae833;
+  border-radius: 16px;
+  box-shadow: 0 24px 100px #0008;
+}
+.saas-logout-dialog::backdrop {
+  background: #08070bbd;
+  backdrop-filter: blur(6px);
+}
+.saas-logout-close {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  color: #a793bb;
+  background: transparent;
+  cursor: pointer;
+}
+.saas-logout-close:hover {
+  background: #b79bea12;
+  color: #e9e0f2;
+}
+.saas-logout-symbol {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+  border: 1px solid #b79bea26;
+  border-radius: 12px;
+  background: #b79bea0c;
+  color: #bca3f7;
+}
+.saas-logout-dialog h2 {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.7px;
+  line-height: 1.3;
+  margin: 0 0 12px;
+}
+.saas-logout-dialog p {
+  color: #a798b4;
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 0;
+}
+.saas-logout-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #ffffff0b;
+}
+.saas-logout-dialog button:focus-visible {
+  outline: 2px solid #c4aaff;
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .saas-ui .saas-logout-dialog {
+    padding: 28px 24px;
+  }
+  .saas-logout-actions .app-button {
+    flex: 1;
+    justify-content: center;
+    min-height: 44px;
+  }
+}
+.saas-ui .saas-logout-actions .app-button--primary {
+  background: #bca3f7 !important;
+  border-color: #bca3f7 !important;
+  color: #171023 !important;
+}
+.saas-ui .saas-logout-actions .app-button--primary:hover {
+  background: #c9b3ff !important;
+}
