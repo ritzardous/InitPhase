@@ -6,9 +6,11 @@ InitPhase is an enterprise-grade SaaS project management workspace designed to f
 
 ### Frontend
 - **Framework:** React 19
-- **Build Tool:** Vite
+- **Build Tool:** Vite 7
 - **Routing:** React Router DOM v7
-- **Styling:** Vanilla CSS with scoped inline styling for components
+- **Styling:** Vanilla CSS with shared dark-lavender design tokens, scoped workspace styles, and component-level inline styling
+- **3D Visuals:** Three.js for the interactive landing-page engineering stack
+- **Animation:** GSAP + ScrollTrigger for scroll-driven landing-page transitions
 - **Charts:** Recharts for data visualization
 - **Icons:** Lucide React
 - **PDF Generation:** html2pdf.js for documentation export
@@ -37,6 +39,8 @@ initphase/
 │   ├── src/
 │   │   ├── assets/             # Images, icons, global styling elements
 │   │   ├── components/         # Reusable structural UI components
+│   │   │   ├── landing/         # Three.js scene, connection atlas, and landing content
+│   │   │   ├── BrandLogo.jsx
 │   │   │   ├── DataTable.jsx
 │   │   │   ├── EmptyState.jsx
 │   │   │   ├── ModuleLayout.jsx
@@ -52,10 +56,13 @@ initphase/
 │   │   │   ├── RequirementsModule.jsx
 │   │   │   ├── SequenceFlowModule.jsx
 │   │   │   ├── IdeaBrdModule.jsx
+│   │   │   ├── ChangeImpactModule.jsx
 │   │   │   ├── RtmModule.jsx
 │   │   │   ├── IssuesModule.jsx
 │   │   │   ├── DocumentationModule.jsx
 │   │   │   └── TestCasesModule.jsx
+│   │   ├── styles/
+│   │   │   └── Workspace.css    # Scoped dashboard and workspace styling
 │   │   ├── utils/
 │   │   │   ├── warmupBackend.js
 │   │   ├── App.jsx             # Main router configuration
@@ -114,9 +121,9 @@ initphase/
 The frontend is implemented as a Single Page Application (SPA) with a heavily modularized routing structure to simulate independent enterprise subsystems.
 
 **Core Routes:**
-- `/`: Landing page (SaaS-focused branding).
-- `/login` & `/register`: Authentication views.
-- `/dashboard`: Primary hub for creating, securing, editing, and deleting distinct projects.
+- `/`: Interactive landing page with a Three.js engineering stack and GSAP scroll-driven storytelling.
+- `/login` & `/register`: Authentication views styled to match the landing page.
+- `/dashboard`: Project hub with search, sorting, grid/list views, inline creation and editing, deletion, and confirmed logout.
 - `/projects/:id/*`: The enterprise workspace wrapper, which contains nested routes:
   - `/overview`: High-level statistical overview of the project.
   - `/requirements`: The Requirements Management Module.
@@ -126,13 +133,14 @@ The frontend is implemented as a Single Page Application (SPA) with a heavily mo
   - `/issues`: Interactive HTML5 Drag-and-Drop Kanban issue tracker.
   - `/rtm`: The Requirement Traceability Matrix (RTM) Analysis Module.
   - `/documentation`: Dynamic Markdown generator combining all project data.
+  - `/change-impact`: AI-assisted change impact analysis using a public GitHub repository summary and a proposed change.
 
 **Shared Components (`/client/src/components`):**
 To maintain visual consistency and DRY principles, shared UI components are utilized across modules:
-- `ModuleLayout`: Standard wrapper providing titles, descriptions, contextual help panels, and embedded subtle styling grids.
+- `ModuleLayout`: Shared wrapper providing titles, descriptions, collapsible module guides, workflow context, spaced sections, and metrics.
 - `StatCard`: Visual component for numerical data representation.
-- `SectionCard`: Wrapper for distinct functional areas within a module.
-- `DataTable`: Reusable structural table for entity lists.
+- `SectionCard`: Wrapper for functional areas with separate section headings, optional descriptions/actions, and restrained content surfaces.
+- `DataTable`: Reusable table for entity lists; test execution and traceability use labeled card layouts on small screens.
 - `EmptyState`: Placeholder graphics for unpopulated data views.
 
 ### Backend Architecture (`/server`)
@@ -160,6 +168,8 @@ The server follows an MVC (Model-View-Controller) derived pattern, exposing REST
 - JWT tokens issued with user ID payload
 - Middleware validates tokens on protected routes
 - Automatic logout on invalid/expired tokens
+- User-triggered logout opens a themed confirmation dialog on desktop and mobile; Cancel, close, or Escape keeps the session active
+- The logout dialog contains keyboard focus and restores focus to its trigger when dismissed
 
 **Interactions:**
 - Provides user context to all project-related modules
@@ -180,8 +190,10 @@ The server follows an MVC (Model-View-Controller) derived pattern, exposing REST
 
 **Internal Logic:**
 - Projects are user-scoped for multi-tenancy
-- Automatic navigation to requirements module after creation
-- Inline editing with optimistic UI updates
+- Automatic navigation to the Idea-to-BRD module after creation
+- Inline editing followed by a project-list refresh after a successful update
+- Search by project name or description, sort by recent activity or name, and switch between grid/list views
+- Project totals, recent updates, and empty-state onboarding provide context
 
 **Interactions:**
 - Creates context for all child modules via React Router outlet
@@ -224,7 +236,8 @@ The server follows an MVC (Model-View-Controller) derived pattern, exposing REST
 - **Outputs:** Generated BRD draft, saved project BRDs, and optional converted requirements
 
 **Internal Logic:**
-- The frontend collects idea context inside a project workspace
+- The frontend collects idea context in a focused editor with an optional context panel; the layout stacks on mobile
+- A document library separates saved BRDs from the editor and identifies documents already converted into requirements
 - The backend calls Groq using `GROQ_API_KEY` and normalizes the response into BRD sections
 - BRDs are saved project-wise with ownership validation
 - Functional requirements from a BRD can be converted into existing project requirements
@@ -494,10 +507,12 @@ curl http://localhost:5000/api/rtm/64f1a2b3c4d5e6f7g8h9i0j1 \
 - Issues are simple status-based (no complex workflows)
 
 ### UI/UX Decisions
-- Dark theme with CSS custom properties for consistency
-- Responsive design with mobile-first approach
-- Subtle grid backgrounds for enterprise feel
-- Collapsible help panels for self-service usability
+- Shared dark-lavender theme with CSS custom properties across landing, authentication, dashboard, and workspace
+- Responsive dashboard and workspace with a mobile navigation drawer, bottom module tabs, and touch-friendly controls
+- Restrained surfaces, consistent section spacing, quieter metrics, and distinct heading hierarchy reduce visual clutter
+- Collapsible module guides and project-path navigation keep workflow context available without crowding the editor
+- Landing animations respect reduced-motion preferences; the 3D visual includes a pause control and fallback
+- Logout requires explicit confirmation with accessible keyboard navigation
 
 ### Performance Considerations
 - Lazy loading of route components
@@ -508,7 +523,7 @@ curl http://localhost:5000/api/rtm/64f1a2b3c4d5e6f7g8h9i0j1 \
 ## Development Setup
 
 ### Prerequisites
-- Node.js (v18 or higher recommended)
+- Node.js 20.19+ or 22.12+ (required by Vite 7)
 - MongoDB instance (local or Atlas cluster)
 
 ### Environment Variables
